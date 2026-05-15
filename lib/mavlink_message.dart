@@ -12,6 +12,8 @@ abstract class MavlinkMessage {
 
   ByteData serialize();
 
+  Map<String, dynamic> toJson();
+
   static Int8List asInt8List(ByteData data, int offsetInBytes, int length) {
     Int8List ret = Int8List(length);
     for (var i = 0; i < length; i++) {
@@ -30,7 +32,8 @@ abstract class MavlinkMessage {
     return ret;
   }
 
-  static Int16List asInt16List(ByteData data, int offsetInBytes, int length, [Endian endian=Endian.little]) {
+  static Int16List asInt16List(ByteData data, int offsetInBytes, int length,
+      [Endian endian = Endian.little]) {
     Int16List ret = Int16List(length);
     for (var i = 0; i < length; i++) {
       ret[i] = data.getInt16(offsetInBytes + (i * 2), endian);
@@ -39,7 +42,8 @@ abstract class MavlinkMessage {
     return ret;
   }
 
-  static Uint16List asUint16List(ByteData data, int offsetInBytes, int length, [Endian endian=Endian.little]) {
+  static Uint16List asUint16List(ByteData data, int offsetInBytes, int length,
+      [Endian endian = Endian.little]) {
     Uint16List ret = Uint16List(length);
     for (var i = 0; i < length; i++) {
       ret[i] = data.getUint16(offsetInBytes + (i * 2), endian);
@@ -48,7 +52,8 @@ abstract class MavlinkMessage {
     return ret;
   }
 
-  static Int32List asInt32List(ByteData data, int offsetInBytes, int length, [Endian endian=Endian.little]) {
+  static Int32List asInt32List(ByteData data, int offsetInBytes, int length,
+      [Endian endian = Endian.little]) {
     Int32List ret = Int32List(length);
     for (var i = 0; i < length; i++) {
       ret[i] = data.getInt32(offsetInBytes + (i * 4), endian);
@@ -57,7 +62,8 @@ abstract class MavlinkMessage {
     return ret;
   }
 
-  static Uint32List asUint32List(ByteData data, int offsetInBytes, int length, [Endian endian=Endian.little]) {
+  static Uint32List asUint32List(ByteData data, int offsetInBytes, int length,
+      [Endian endian = Endian.little]) {
     Uint32List ret = Uint32List(length);
     for (var i = 0; i < length; i++) {
       ret[i] = data.getUint32(offsetInBytes + (i * 4), endian);
@@ -66,7 +72,8 @@ abstract class MavlinkMessage {
     return ret;
   }
 
-  static Float32List asFloat32List(ByteData data, int offsetInBytes, int length, [Endian endian=Endian.little]) {
+  static Float32List asFloat32List(ByteData data, int offsetInBytes, int length,
+      [Endian endian = Endian.little]) {
     Float32List ret = Float32List(length);
     for (var i = 0; i < length; i++) {
       ret[i] = data.getFloat32(offsetInBytes + (i * 4), endian);
@@ -75,7 +82,8 @@ abstract class MavlinkMessage {
     return ret;
   }
 
-  static Float64List asFloat64List(ByteData data, int offsetInBytes, int length, [Endian endian=Endian.little]) {
+  static Float64List asFloat64List(ByteData data, int offsetInBytes, int length,
+      [Endian endian = Endian.little]) {
     Float64List ret = Float64List(length);
     for (var i = 0; i < length; i++) {
       ret[i] = data.getFloat64(offsetInBytes + (i * 8), endian);
@@ -98,56 +106,64 @@ abstract class MavlinkMessage {
     }
   }
 
-  static void setInt16List(ByteData data, int offsetByte, List<int> list, [Endian endian=Endian.little]) {
+  static void setInt16List(ByteData data, int offsetByte, List<int> list,
+      [Endian endian = Endian.little]) {
     int len = list.length;
     for (int i = 0; i < len; i++) {
       data.setInt16(offsetByte + (i * 2), list[i], endian);
     }
   }
 
-  static void setUint16List(ByteData data, int offsetByte, List<int> list, [Endian endian=Endian.little]) {
+  static void setUint16List(ByteData data, int offsetByte, List<int> list,
+      [Endian endian = Endian.little]) {
     int len = list.length;
     for (int i = 0; i < len; i++) {
       data.setUint16(offsetByte + (i * 2), list[i], endian);
     }
   }
 
-  static void setInt32List(ByteData data, int offsetByte, List<int> list, [Endian endian=Endian.little]) {
+  static void setInt32List(ByteData data, int offsetByte, List<int> list,
+      [Endian endian = Endian.little]) {
     int len = list.length;
     for (int i = 0; i < len; i++) {
       data.setInt32(offsetByte + (i * 4), list[i], endian);
     }
   }
 
-  static void setUint32List(ByteData data, int offsetByte, List<int> list, [Endian endian=Endian.little]) {
+  static void setUint32List(ByteData data, int offsetByte, List<int> list,
+      [Endian endian = Endian.little]) {
     int len = list.length;
     for (int i = 0; i < len; i++) {
       data.setUint32(offsetByte + (i * 4), list[i], endian);
     }
   }
 
-  static void setInt64List(ByteData data, int offsetByte, List<int> list, [Endian endian=Endian.little]) {
+  static void setInt64List(ByteData data, int offsetByte, List<int> list,
+      [Endian endian = Endian.little]) {
     int len = list.length;
     for (int i = 0; i < len; i++) {
       data.setInt64(offsetByte + (i * 8), list[i], endian);
     }
   }
 
-  static void setUint64List(ByteData data, int offsetByte, List<int> list, [Endian endian=Endian.little]) {
+  static void setUint64List(ByteData data, int offsetByte, List<int> list,
+      [Endian endian = Endian.little]) {
     int len = list.length;
     for (int i = 0; i < len; i++) {
       data.setUint64(offsetByte + (i * 8), list[i], endian);
     }
   }
 
-  static void setFloat32List(ByteData data, int offsetByte, List<double> list, [Endian endian=Endian.little]) {
+  static void setFloat32List(ByteData data, int offsetByte, List<double> list,
+      [Endian endian = Endian.little]) {
     int len = list.length;
     for (int i = 0; i < len; i++) {
       data.setFloat32(offsetByte + (i * 4), list[i], endian);
     }
   }
 
-  static void setFloat64List(ByteData data, int offsetByte, List<double> list, [Endian endian=Endian.little]) {
+  static void setFloat64List(ByteData data, int offsetByte, List<double> list,
+      [Endian endian = Endian.little]) {
     int len = list.length;
     for (int i = 0; i < len; i++) {
       data.setFloat64(offsetByte + (i * 8), list[i], endian);

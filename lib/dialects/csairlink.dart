@@ -123,6 +123,12 @@ class AirlinkAuth implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 50, password);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'login': login,
+        'password': password,
+      };
 }
 
 /// Response to the authorization request
@@ -171,6 +177,11 @@ class AirlinkAuthResponse implements MavlinkMessage {
     data_.setUint8(0, respType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'resp_type': respType,
+      };
 }
 
 /// Request to hole punching
@@ -221,6 +232,11 @@ class AirlinkEyeGsHolePushRequest implements MavlinkMessage {
     data_.setUint8(0, respType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'resp_type': respType,
+      };
 }
 
 /// Response information about the connected device
@@ -318,6 +334,15 @@ class AirlinkEyeGsHolePushResponse implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 10, ipAddress6);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'ip_port': ipPort,
+        'resp_type': respType,
+        'ip_version': ipVersion,
+        'ip_address_4': ipAddress4,
+        'ip_address_6': ipAddress6,
+      };
 }
 
 /// A package with information about the hole punching status. It is used for constant sending to avoid NAT closing timeout.
@@ -366,6 +391,11 @@ class AirlinkEyeHp implements MavlinkMessage {
     data_.setUint8(0, respType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'resp_type': respType,
+      };
 }
 
 /// Initializing the TURN protocol
@@ -414,6 +444,11 @@ class AirlinkEyeTurnInit implements MavlinkMessage {
     data_.setUint8(0, respType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'resp_type': respType,
+      };
 }
 
 class MavlinkDialectCsairlink implements MavlinkDialect {

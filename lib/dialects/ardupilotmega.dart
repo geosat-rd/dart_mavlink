@@ -10218,6 +10218,16 @@ class Heartbeat implements MavlinkMessage {
     data_.setUint8(8, mavlinkVersion);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'custom_mode': customMode,
+        'type': type,
+        'autopilot': autopilot,
+        'base_mode': baseMode,
+        'system_status': systemStatus,
+        'mavlink_version': mavlinkVersion,
+      };
 }
 
 /// Version and capability of protocol version. This message can be requested with MAV_CMD_REQUEST_MESSAGE and is used as part of the handshaking to establish which MAVLink version should be used on the network. Every node should respond to a request for PROTOCOL_VERSION to enable the handshaking. Library implementers should consider adding this into the default decoding state machine to allow the protocol core to respond directly.
@@ -10309,6 +10319,15 @@ class ProtocolVersion implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 14, libraryVersionHash);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'version': version,
+        'min_version': minVersion,
+        'max_version': maxVersion,
+        'spec_version_hash': specVersionHash,
+        'library_version_hash': libraryVersionHash,
+      };
 }
 
 /// The general system state. If the system is following the MAVLink standard, the system state is mainly defined by three orthogonal states/modes: The system mode, which is either LOCKED (motors shut down and locked), MANUAL (system under RC control), GUIDED (system with autonomous position control, position setpoint controlled manually) or AUTO (system guided by path/waypoint planner). The NAV_MODE defined the current flight state: LIFTOFF (often an open-loop maneuver), LANDING, WAYPOINTS or VECTOR. This represents the internal navigation state machine. The system status shows whether the system is currently active or not and if an emergency occurred. During the CRITICAL and EMERGENCY states the MAV is still considered to be active, but should start emergency procedures autonomously. After a failure occurred it should first move from active to critical to allow manual intervention and then move to emergency after a certain timeout.
@@ -10555,6 +10574,26 @@ class SysStatus implements MavlinkMessage {
     data_.setUint32(39, onboardControlSensorsHealthExtended, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'onboard_control_sensors_present': onboardControlSensorsPresent,
+        'onboard_control_sensors_enabled': onboardControlSensorsEnabled,
+        'onboard_control_sensors_health': onboardControlSensorsHealth,
+        'load': load,
+        'voltage_battery': voltageBattery,
+        'current_battery': currentBattery,
+        'drop_rate_comm': dropRateComm,
+        'errors_comm': errorsComm,
+        'errors_count1': errorsCount1,
+        'errors_count2': errorsCount2,
+        'errors_count3': errorsCount3,
+        'errors_count4': errorsCount4,
+        'battery_remaining': batteryRemaining,
+        'onboard_control_sensors_present_extended': onboardControlSensorsPresentExtended,
+        'onboard_control_sensors_enabled_extended': onboardControlSensorsEnabledExtended,
+        'onboard_control_sensors_health_extended': onboardControlSensorsHealthExtended,
+      };
 }
 
 /// The system time is the time of the master clock, typically the computer clock of the main onboard computer.
@@ -10615,6 +10654,12 @@ class SystemTime implements MavlinkMessage {
     data_.setUint32(8, timeBootMs, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_unix_usec': timeUnixUsec,
+        'time_boot_ms': timeBootMs,
+      };
 }
 
 /// A ping message either requesting or responding to a ping. This allows to measure the system latencies, including serial port, radio modem and UDP connections. The ping microservice is documented at https://mavlink.io/en/services/ping.html
@@ -10697,6 +10742,14 @@ class Ping implements MavlinkMessage {
     data_.setUint8(13, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'seq': seq,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Request to control this MAV
@@ -10780,6 +10833,14 @@ class ChangeOperatorControl implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 3, passkey);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'control_request': controlRequest,
+        'version': version,
+        'passkey': passkey,
+      };
 }
 
 /// Accept / deny control of this MAV
@@ -10848,6 +10909,13 @@ class ChangeOperatorControlAck implements MavlinkMessage {
     data_.setUint8(2, ack);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'gcs_system_id': gcsSystemId,
+        'control_request': controlRequest,
+        'ack': ack,
+      };
 }
 
 /// Emit an encrypted signature / key identifying this system. PLEASE NOTE: This protocol has been kept simple, so transmitting the key requires an encrypted channel for true safety.
@@ -10894,6 +10962,11 @@ class AuthKey implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 0, key);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'key': key,
+      };
 }
 
 /// Status generated in each node in the communication chain and injected into MAVLink stream.
@@ -11067,6 +11140,21 @@ class LinkNodeStatus implements MavlinkMessage {
     data_.setUint8(35, rxBuf);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'timestamp': timestamp,
+        'tx_rate': txRate,
+        'rx_rate': rxRate,
+        'messages_sent': messagesSent,
+        'messages_received': messagesReceived,
+        'messages_lost': messagesLost,
+        'rx_parse_err': rxParseErr,
+        'tx_overflows': txOverflows,
+        'rx_overflows': rxOverflows,
+        'tx_buf': txBuf,
+        'rx_buf': rxBuf,
+      };
 }
 
 /// Set the system mode, as defined by enum MAV_MODE. There is no target component id as the mode is by definition for the overall aircraft, not only for one component.
@@ -11136,6 +11224,13 @@ class SetMode implements MavlinkMessage {
     data_.setUint8(5, baseMode);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'custom_mode': customMode,
+        'target_system': targetSystem,
+        'base_mode': baseMode,
+      };
 }
 
 /// Request to read the onboard parameter with the param_id string id. Onboard parameters are stored as key[const char*] -> value[float]. This allows to send a parameter to any other component (such as the GCS) without the need of previous knowledge of possible parameter names. Thus the same GCS can store different parameters for different autopilots. See also https://mavlink.io/en/services/parameter.html for a full documentation of QGroundControl and IMU code.
@@ -11216,6 +11311,14 @@ class ParamRequestRead implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 4, paramId);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'param_index': paramIndex,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'param_id': paramId,
+      };
 }
 
 /// Request all parameters of this component. After this request, all parameters are emitted. The parameter microservice is documented at https://mavlink.io/en/services/parameter.html
@@ -11273,6 +11376,12 @@ class ParamRequestList implements MavlinkMessage {
     data_.setUint8(1, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Emit the value of a onboard parameter. The inclusion of param_count and param_index in the message allows the recipient to keep track of received parameters and allows him to re-request missing parameters after a loss or timeout. The parameter microservice is documented at https://mavlink.io/en/services/parameter.html
@@ -11366,6 +11475,15 @@ class ParamValue implements MavlinkMessage {
     data_.setUint8(24, paramType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'param_value': paramValue,
+        'param_count': paramCount,
+        'param_index': paramIndex,
+        'param_id': paramId,
+        'param_type': paramType,
+      };
 }
 
 /// Set a parameter value (write new value to permanent storage).
@@ -11461,6 +11579,15 @@ class ParamSet implements MavlinkMessage {
     data_.setUint8(22, paramType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'param_value': paramValue,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'param_id': paramId,
+        'param_type': paramType,
+      };
 }
 
 /// The global position, as returned by the Global Positioning System (GPS). This is
@@ -11712,6 +11839,26 @@ class GpsRawInt implements MavlinkMessage {
     data_.setUint16(50, yaw, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'lat': lat,
+        'lon': lon,
+        'alt': alt,
+        'eph': eph,
+        'epv': epv,
+        'vel': vel,
+        'cog': cog,
+        'fix_type': fixType,
+        'satellites_visible': satellitesVisible,
+        'alt_ellipsoid': altEllipsoid,
+        'h_acc': hAcc,
+        'v_acc': vAcc,
+        'vel_acc': velAcc,
+        'hdg_acc': hdgAcc,
+        'yaw': yaw,
+      };
 }
 
 /// The positioning status, as reported by GPS. This message is intended to display status information about each satellite visible to the receiver. See message GLOBAL_POSITION_INT for the global position estimate. This message can contain information for up to 20 satellites.
@@ -11820,6 +11967,16 @@ class GpsStatus implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 81, satelliteSnr);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'satellites_visible': satellitesVisible,
+        'satellite_prn': satellitePrn,
+        'satellite_used': satelliteUsed,
+        'satellite_elevation': satelliteElevation,
+        'satellite_azimuth': satelliteAzimuth,
+        'satellite_snr': satelliteSnr,
+      };
 }
 
 /// The RAW IMU readings for the usual 9DOF sensor setup. This message should contain the scaled values to the described units
@@ -12001,6 +12158,21 @@ class ScaledImu implements MavlinkMessage {
     data_.setInt16(22, temperature, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'xacc': xacc,
+        'yacc': yacc,
+        'zacc': zacc,
+        'xgyro': xgyro,
+        'ygyro': ygyro,
+        'zgyro': zgyro,
+        'xmag': xmag,
+        'ymag': ymag,
+        'zmag': zmag,
+        'temperature': temperature,
+      };
 }
 
 /// The RAW IMU readings for a 9DOF sensor, which is identified by the id (default IMU1). This message should always contain the true raw values without any scaling to allow data capture and system debugging.
@@ -12177,6 +12349,22 @@ class RawImu implements MavlinkMessage {
     data_.setInt16(27, temperature, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'xacc': xacc,
+        'yacc': yacc,
+        'zacc': zacc,
+        'xgyro': xgyro,
+        'ygyro': ygyro,
+        'zgyro': zgyro,
+        'xmag': xmag,
+        'ymag': ymag,
+        'zmag': zmag,
+        'id': id,
+        'temperature': temperature,
+      };
 }
 
 /// The RAW pressure readings for the typical setup of one absolute pressure and one differential pressure sensor. The sensor values should be the raw, UNSCALED ADC values.
@@ -12270,6 +12458,15 @@ class RawPressure implements MavlinkMessage {
     data_.setInt16(14, temperature, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'press_abs': pressAbs,
+        'press_diff1': pressDiff1,
+        'press_diff2': pressDiff2,
+        'temperature': temperature,
+      };
 }
 
 /// The pressure readings for the typical setup of one absolute and differential pressure sensor. The units are as specified in each field.
@@ -12373,6 +12570,15 @@ class ScaledPressure implements MavlinkMessage {
     data_.setInt16(14, temperaturePressDiff, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'press_abs': pressAbs,
+        'press_diff': pressDiff,
+        'temperature': temperature,
+        'temperature_press_diff': temperaturePressDiff,
+      };
 }
 
 /// The attitude in the aeronautical frame (right-handed, Z-down, Y-right, X-front, ZYX, intrinsic).
@@ -12500,6 +12706,17 @@ class Attitude implements MavlinkMessage {
     data_.setFloat32(24, yawspeed, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'roll': roll,
+        'pitch': pitch,
+        'yaw': yaw,
+        'rollspeed': rollspeed,
+        'pitchspeed': pitchspeed,
+        'yawspeed': yawspeed,
+      };
 }
 
 /// The attitude in the aeronautical frame (right-handed, Z-down, X-front, Y-right), expressed as quaternion. Quaternion order is w, x, y, z and a zero rotation would be expressed as (1 0 0 0).
@@ -12645,6 +12862,19 @@ class AttitudeQuaternion implements MavlinkMessage {
     MavlinkMessage.setFloat32List(data_, 32, reprOffsetQ);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'q1': q1,
+        'q2': q2,
+        'q3': q3,
+        'q4': q4,
+        'rollspeed': rollspeed,
+        'pitchspeed': pitchspeed,
+        'yawspeed': yawspeed,
+        'repr_offset_q': reprOffsetQ,
+      };
 }
 
 /// The filtered local position (e.g. fused computer vision and accelerometers). Coordinate frame is right-handed, Z-axis down (aeronautical frame, NED / north-east-down convention)
@@ -12766,6 +12996,17 @@ class LocalPositionNed implements MavlinkMessage {
     data_.setFloat32(24, vz, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'x': x,
+        'y': y,
+        'z': z,
+        'vx': vx,
+        'vy': vy,
+        'vz': vz,
+      };
 }
 
 /// The filtered global position (e.g. fused GPS and accelerometers). The position is in GPS-frame (right-handed, Z-up). It
@@ -12920,6 +13161,19 @@ class GlobalPositionInt implements MavlinkMessage {
     data_.setUint16(26, hdg, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'lat': lat,
+        'lon': lon,
+        'alt': alt,
+        'relative_alt': relativeAlt,
+        'vx': vx,
+        'vy': vy,
+        'vz': vz,
+        'hdg': hdg,
+      };
 }
 
 /// The scaled values of the RC channels received: (-100%) -10000, (0%) 0, (100%) 10000. Channels that are inactive should be set to INT16_MAX.
@@ -13079,6 +13333,21 @@ class RcChannelsScaled implements MavlinkMessage {
     data_.setUint8(21, rssi);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'chan1_scaled': chan1Scaled,
+        'chan2_scaled': chan2Scaled,
+        'chan3_scaled': chan3Scaled,
+        'chan4_scaled': chan4Scaled,
+        'chan5_scaled': chan5Scaled,
+        'chan6_scaled': chan6Scaled,
+        'chan7_scaled': chan7Scaled,
+        'chan8_scaled': chan8Scaled,
+        'port': port,
+        'rssi': rssi,
+      };
 }
 
 /// The RAW values of the RC channels received. The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%. A value of UINT16_MAX implies the channel is unused. Individual receivers/transmitters might violate this specification.
@@ -13254,6 +13523,21 @@ class RcChannelsRaw implements MavlinkMessage {
     data_.setUint8(21, rssi);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'chan1_raw': chan1Raw,
+        'chan2_raw': chan2Raw,
+        'chan3_raw': chan3Raw,
+        'chan4_raw': chan4Raw,
+        'chan5_raw': chan5Raw,
+        'chan6_raw': chan6Raw,
+        'chan7_raw': chan7Raw,
+        'chan8_raw': chan8Raw,
+        'port': port,
+        'rssi': rssi,
+      };
 }
 
 /// Superseded by ACTUATOR_OUTPUT_STATUS. The RAW values of the servo outputs (for RC input from the remote, use the RC_CHANNELS messages). The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%.
@@ -13538,6 +13822,28 @@ class ServoOutputRaw implements MavlinkMessage {
     data_.setUint16(35, servo16Raw, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'servo1_raw': servo1Raw,
+        'servo2_raw': servo2Raw,
+        'servo3_raw': servo3Raw,
+        'servo4_raw': servo4Raw,
+        'servo5_raw': servo5Raw,
+        'servo6_raw': servo6Raw,
+        'servo7_raw': servo7Raw,
+        'servo8_raw': servo8Raw,
+        'port': port,
+        'servo9_raw': servo9Raw,
+        'servo10_raw': servo10Raw,
+        'servo11_raw': servo11Raw,
+        'servo12_raw': servo12Raw,
+        'servo13_raw': servo13Raw,
+        'servo14_raw': servo14Raw,
+        'servo15_raw': servo15Raw,
+        'servo16_raw': servo16Raw,
+      };
 }
 
 /// Request a partial list of mission items from the system/component. https://mavlink.io/en/services/mission.html. If start and end index are the same, just send one waypoint.
@@ -13634,6 +13940,15 @@ class MissionRequestPartialList implements MavlinkMessage {
     data_.setUint8(6, missionType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'start_index': startIndex,
+        'end_index': endIndex,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'mission_type': missionType,
+      };
 }
 
 /// This message is sent to the MAV to write a partial list. If start index == end index, only one item will be transmitted / updated. If the start index is NOT 0 and above the current list size, this request should be REJECTED!
@@ -13730,6 +14045,15 @@ class MissionWritePartialList implements MavlinkMessage {
     data_.setUint8(6, missionType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'start_index': startIndex,
+        'end_index': endIndex,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'mission_type': missionType,
+      };
 }
 
 /// Message encoding a mission item. This message is emitted to announce
@@ -13940,6 +14264,25 @@ class MissionItem implements MavlinkMessage {
     data_.setUint8(37, missionType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'param1': param1,
+        'param2': param2,
+        'param3': param3,
+        'param4': param4,
+        'x': x,
+        'y': y,
+        'z': z,
+        'seq': seq,
+        'command': command,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'frame': frame,
+        'current': current,
+        'autocontinue': autocontinue,
+        'mission_type': missionType,
+      };
 }
 
 /// Request the information of the mission item with the sequence number seq. The response of the system to this message should be a MISSION_ITEM message. https://mavlink.io/en/services/mission.html
@@ -14024,6 +14367,14 @@ class MissionRequest implements MavlinkMessage {
     data_.setUint8(4, missionType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'seq': seq,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'mission_type': missionType,
+      };
 }
 
 ///
@@ -14099,6 +14450,13 @@ class MissionSetCurrent implements MavlinkMessage {
     data_.setUint8(3, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'seq': seq,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 ///
@@ -14230,6 +14588,17 @@ class MissionCurrent implements MavlinkMessage {
     data_.setUint32(14, rallyPointsId, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'seq': seq,
+        'total': total,
+        'mission_state': missionState,
+        'mission_mode': missionMode,
+        'mission_id': missionId,
+        'fence_id': fenceId,
+        'rally_points_id': rallyPointsId,
+      };
 }
 
 /// Request the overall list of mission items from the system/component.
@@ -14303,6 +14672,13 @@ class MissionRequestList implements MavlinkMessage {
     data_.setUint8(2, missionType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'mission_type': missionType,
+      };
 }
 
 /// This message is emitted as response to MISSION_REQUEST_LIST by the MAV and to initiate a write transaction. The GCS can then request the individual mission item based on the knowledge of the total number of waypoints.
@@ -14406,6 +14782,15 @@ class MissionCount implements MavlinkMessage {
     data_.setUint32(5, opaqueId, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'count': count,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'mission_type': missionType,
+        'opaque_id': opaqueId,
+      };
 }
 
 /// Delete all mission items at once.
@@ -14479,6 +14864,13 @@ class MissionClearAll implements MavlinkMessage {
     data_.setUint8(2, missionType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'mission_type': missionType,
+      };
 }
 
 /// A certain mission item has been reached. The system will either hold this position (or circle on the orbit) or (if the autocontinue on the WP was set) continue to the next waypoint.
@@ -14525,6 +14917,11 @@ class MissionItemReached implements MavlinkMessage {
     data_.setUint16(0, seq, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'seq': seq,
+      };
 }
 
 /// Acknowledgment message during waypoint handling. The type field states if this message is a positive ack (type=0) or if an error happened (type=non-zero).
@@ -14630,6 +15027,15 @@ class MissionAck implements MavlinkMessage {
     data_.setUint32(4, opaqueId, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'type': type,
+        'mission_type': missionType,
+        'opaque_id': opaqueId,
+      };
 }
 
 /// Sets the GPS coordinates of the vehicle local origin (0,0,0) position. Vehicle should emit GPS_GLOBAL_ORIGIN irrespective of whether the origin is changed. This enables transform between the local coordinate frame and the global (GPS) coordinate frame, which may be necessary when (for example) indoor and outdoor settings are connected and the MAV should move from in- to outdoor.
@@ -14731,6 +15137,15 @@ class SetGpsGlobalOrigin implements MavlinkMessage {
     data_.setUint64(13, timeUsec, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'latitude': latitude,
+        'longitude': longitude,
+        'altitude': altitude,
+        'target_system': targetSystem,
+        'time_usec': timeUsec,
+      };
 }
 
 /// Publishes the GPS coordinates of the vehicle local origin (0,0,0) position. Emitted whenever a new GPS-Local position mapping is requested or set - e.g. following SET_GPS_GLOBAL_ORIGIN message.
@@ -14821,6 +15236,14 @@ class GpsGlobalOrigin implements MavlinkMessage {
     data_.setUint64(12, timeUsec, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'latitude': latitude,
+        'longitude': longitude,
+        'altitude': altitude,
+        'time_usec': timeUsec,
+      };
 }
 
 /// Bind a RC channel to a parameter. The parameter should change according to the RC channel value.
@@ -14956,6 +15379,19 @@ class ParamMapRc implements MavlinkMessage {
     data_.setUint8(36, parameterRcChannelIndex);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'param_value0': paramValue0,
+        'scale': scale,
+        'param_value_min': paramValueMin,
+        'param_value_max': paramValueMax,
+        'param_index': paramIndex,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'param_id': paramId,
+        'parameter_rc_channel_index': parameterRcChannelIndex,
+      };
 }
 
 /// Request the information of the mission item with the sequence number seq. The response of the system to this message should be a MISSION_ITEM_INT message. https://mavlink.io/en/services/mission.html
@@ -15040,6 +15476,14 @@ class MissionRequestInt implements MavlinkMessage {
     data_.setUint8(4, missionType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'seq': seq,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'mission_type': missionType,
+      };
 }
 
 /// Set a safety zone (volume), which is defined by two corners of a cube. This message can be used to tell the MAV which setpoints/waypoints to accept and which to reject. Safety areas are often enforced by national or competition regulations.
@@ -15189,6 +15633,19 @@ class SafetySetAllowedArea implements MavlinkMessage {
     data_.setUint8(26, frame);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'p1x': p1x,
+        'p1y': p1y,
+        'p1z': p1z,
+        'p2x': p2x,
+        'p2y': p2y,
+        'p2z': p2z,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'frame': frame,
+      };
 }
 
 /// Read out the safety zone the MAV currently assumes.
@@ -15316,6 +15773,17 @@ class SafetyAllowedArea implements MavlinkMessage {
     data_.setUint8(24, frame);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'p1x': p1x,
+        'p1y': p1y,
+        'p1z': p1z,
+        'p2x': p2x,
+        'p2y': p2y,
+        'p2z': p2z,
+        'frame': frame,
+      };
 }
 
 /// The attitude in the aeronautical frame (right-handed, Z-down, X-front, Y-right), expressed as quaternion. Quaternion order is w, x, y, z and a zero rotation would be expressed as (1 0 0 0).
@@ -15427,6 +15895,16 @@ class AttitudeQuaternionCov implements MavlinkMessage {
     MavlinkMessage.setFloat32List(data_, 36, covariance);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'q': q,
+        'rollspeed': rollspeed,
+        'pitchspeed': pitchspeed,
+        'yawspeed': yawspeed,
+        'covariance': covariance,
+      };
 }
 
 /// The state of the navigation and position controller.
@@ -15567,6 +16045,18 @@ class NavControllerOutput implements MavlinkMessage {
     data_.setUint16(24, wpDist, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'nav_roll': navRoll,
+        'nav_pitch': navPitch,
+        'alt_error': altError,
+        'aspd_error': aspdError,
+        'xtrack_error': xtrackError,
+        'nav_bearing': navBearing,
+        'target_bearing': targetBearing,
+        'wp_dist': wpDist,
+      };
 }
 
 /// The filtered global position (e.g. fused GPS and accelerometers). The position is in GPS-frame (right-handed, Z-up). It  is designed as scaled integer message since the resolution of float is not sufficient. NOTE: This message is intended for onboard networks / companion computers and higher-bandwidth links and optimized for accuracy and completeness. Please use the GLOBAL_POSITION_INT message for a minimal subset.
@@ -15731,6 +16221,20 @@ class GlobalPositionIntCov implements MavlinkMessage {
     data_.setUint8(180, estimatorType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'lat': lat,
+        'lon': lon,
+        'alt': alt,
+        'relative_alt': relativeAlt,
+        'vx': vx,
+        'vy': vy,
+        'vz': vz,
+        'covariance': covariance,
+        'estimator_type': estimatorType,
+      };
 }
 
 /// The filtered local position (e.g. fused computer vision and accelerometers). Coordinate frame is right-handed, Z-axis down (aeronautical frame, NED / north-east-down convention)
@@ -15921,6 +16425,22 @@ class LocalPositionNedCov implements MavlinkMessage {
     data_.setUint8(224, estimatorType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'x': x,
+        'y': y,
+        'z': z,
+        'vx': vx,
+        'vy': vy,
+        'vz': vz,
+        'ax': ax,
+        'ay': ay,
+        'az': az,
+        'covariance': covariance,
+        'estimator_type': estimatorType,
+      };
 }
 
 /// The PPM values of the RC channels received. The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%.  A value of UINT16_MAX implies the channel is unused. Individual receivers/transmitters might violate this specification.
@@ -16226,6 +16746,31 @@ class RcChannels implements MavlinkMessage {
     data_.setUint8(41, rssi);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'chan1_raw': chan1Raw,
+        'chan2_raw': chan2Raw,
+        'chan3_raw': chan3Raw,
+        'chan4_raw': chan4Raw,
+        'chan5_raw': chan5Raw,
+        'chan6_raw': chan6Raw,
+        'chan7_raw': chan7Raw,
+        'chan8_raw': chan8Raw,
+        'chan9_raw': chan9Raw,
+        'chan10_raw': chan10Raw,
+        'chan11_raw': chan11Raw,
+        'chan12_raw': chan12Raw,
+        'chan13_raw': chan13Raw,
+        'chan14_raw': chan14Raw,
+        'chan15_raw': chan15Raw,
+        'chan16_raw': chan16Raw,
+        'chan17_raw': chan17Raw,
+        'chan18_raw': chan18Raw,
+        'chancount': chancount,
+        'rssi': rssi,
+      };
 }
 
 /// Request a data stream.
@@ -16319,6 +16864,15 @@ class RequestDataStream implements MavlinkMessage {
     data_.setUint8(5, startStop);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'req_message_rate': reqMessageRate,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'req_stream_id': reqStreamId,
+        'start_stop': startStop,
+      };
 }
 
 /// Data stream status information.
@@ -16388,6 +16942,13 @@ class DataStream implements MavlinkMessage {
     data_.setUint8(3, onOff);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'message_rate': messageRate,
+        'stream_id': streamId,
+        'on_off': onOff,
+      };
 }
 
 /// This message provides an API for manually controlling the vehicle using standard joystick axes nomenclature, along with a joystick-like input device. Unused axes can be disabled and buttons states are transmitted as individual on/off bits of a bitmask
@@ -16620,6 +17181,26 @@ class ManualControl implements MavlinkMessage {
     data_.setInt16(28, aux6, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'x': x,
+        'y': y,
+        'z': z,
+        'r': r,
+        'buttons': buttons,
+        'target': target,
+        'buttons2': buttons2,
+        'enabled_extensions': enabledExtensions,
+        's': s,
+        't': t,
+        'aux1': aux1,
+        'aux2': aux2,
+        'aux3': aux3,
+        'aux4': aux4,
+        'aux5': aux5,
+        'aux6': aux6,
+      };
 }
 
 /// The RAW values of the RC channels sent to the MAV to override info received from the RC radio. The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%. Individual receivers/transmitters might violate this specification.  Note carefully the semantic differences between the first 8 channels and the subsequent channels
@@ -16932,6 +17513,30 @@ class RcChannelsOverride implements MavlinkMessage {
     data_.setUint16(36, chan18Raw, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'chan1_raw': chan1Raw,
+        'chan2_raw': chan2Raw,
+        'chan3_raw': chan3Raw,
+        'chan4_raw': chan4Raw,
+        'chan5_raw': chan5Raw,
+        'chan6_raw': chan6Raw,
+        'chan7_raw': chan7Raw,
+        'chan8_raw': chan8Raw,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'chan9_raw': chan9Raw,
+        'chan10_raw': chan10Raw,
+        'chan11_raw': chan11Raw,
+        'chan12_raw': chan12Raw,
+        'chan13_raw': chan13Raw,
+        'chan14_raw': chan14Raw,
+        'chan15_raw': chan15Raw,
+        'chan16_raw': chan16Raw,
+        'chan17_raw': chan17Raw,
+        'chan18_raw': chan18Raw,
+      };
 }
 
 /// Message encoding a mission item. This message is emitted to announce
@@ -17142,6 +17747,25 @@ class MissionItemInt implements MavlinkMessage {
     data_.setUint8(37, missionType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'param1': param1,
+        'param2': param2,
+        'param3': param3,
+        'param4': param4,
+        'x': x,
+        'y': y,
+        'z': z,
+        'seq': seq,
+        'command': command,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'frame': frame,
+        'current': current,
+        'autocontinue': autocontinue,
+        'mission_type': missionType,
+      };
 }
 
 /// Metrics typically displayed on a HUD for fixed wing aircraft.
@@ -17256,6 +17880,16 @@ class VfrHud implements MavlinkMessage {
     data_.setUint16(18, throttle, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'airspeed': airspeed,
+        'groundspeed': groundspeed,
+        'alt': alt,
+        'climb': climb,
+        'heading': heading,
+        'throttle': throttle,
+      };
 }
 
 /// Send a command with up to seven parameters to the MAV, where params 5 and 6 are integers and the other values are floats. This is preferred over COMMAND_LONG as it allows the MAV_FRAME to be specified for interpreting positional information, such as altitude. COMMAND_INT is also preferred when sending latitude and longitude data in params 5 and 6, as it allows for greater precision. Param 5 and 6 encode positional data as scaled integers, where the scaling depends on the actual command value. NaN or INT32_MAX may be used in float/integer params (respectively) to indicate optional/default values (e.g. to use the component's current latitude, yaw rather than a specific value). The command microservice is documented at https://mavlink.io/en/services/command.html
@@ -17439,6 +18073,23 @@ class CommandInt implements MavlinkMessage {
     data_.setUint8(34, autocontinue);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'param1': param1,
+        'param2': param2,
+        'param3': param3,
+        'param4': param4,
+        'x': x,
+        'y': y,
+        'z': z,
+        'command': command,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'frame': frame,
+        'current': current,
+        'autocontinue': autocontinue,
+      };
 }
 
 /// Send a command with up to seven parameters to the MAV. COMMAND_INT is generally preferred when sending MAV_CMD commands that include positional information; it offers higher precision and allows the MAV_FRAME to be specified (which may otherwise be ambiguous, particularly for altitude). The command microservice is documented at https://mavlink.io/en/services/command.html
@@ -17598,6 +18249,21 @@ class CommandLong implements MavlinkMessage {
     data_.setUint8(32, confirmation);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'param1': param1,
+        'param2': param2,
+        'param3': param3,
+        'param4': param4,
+        'param5': param5,
+        'param6': param6,
+        'param7': param7,
+        'command': command,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'confirmation': confirmation,
+      };
 }
 
 /// Report status of a command. Includes feedback whether the command was executed. The command microservice is documented at https://mavlink.io/en/services/command.html
@@ -17714,6 +18380,16 @@ class CommandAck implements MavlinkMessage {
     data_.setUint8(9, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'command': command,
+        'result': result,
+        'progress': progress,
+        'result_param2': resultParam2,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Cancel a long running command. The target system should respond with a COMMAND_ACK to the original command with result=MAV_RESULT_CANCELLED if the long running process was cancelled. If it has already completed, the cancel action can be ignored. The cancel action can be retried until some sort of acknowledgement to the original command has been received. The command microservice is documented at https://mavlink.io/en/services/command.html
@@ -17785,6 +18461,13 @@ class CommandCancel implements MavlinkMessage {
     data_.setUint8(3, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'command': command,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Setpoint in roll, pitch, yaw and thrust from the operator
@@ -17906,6 +18589,17 @@ class ManualSetpoint implements MavlinkMessage {
     data_.setUint8(21, manualOverrideSwitch);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'roll': roll,
+        'pitch': pitch,
+        'yaw': yaw,
+        'thrust': thrust,
+        'mode_switch': modeSwitch,
+        'manual_override_switch': manualOverrideSwitch,
+      };
 }
 
 /// Sets a desired vehicle attitude. Used by an external controller to command the vehicle (manual controller or other system).
@@ -18064,6 +18758,20 @@ class SetAttitudeTarget implements MavlinkMessage {
     MavlinkMessage.setFloat32List(data_, 39, thrustBody);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'q': q,
+        'body_roll_rate': bodyRollRate,
+        'body_pitch_rate': bodyPitchRate,
+        'body_yaw_rate': bodyYawRate,
+        'thrust': thrust,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'type_mask': typeMask,
+        'thrust_body': thrustBody,
+      };
 }
 
 /// Reports the current commanded attitude of the vehicle as specified by the autopilot. This should match the commands sent in a SET_ATTITUDE_TARGET message if the vehicle is being controlled this way.
@@ -18187,6 +18895,17 @@ class AttitudeTarget implements MavlinkMessage {
     data_.setUint8(36, typeMask);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'q': q,
+        'body_roll_rate': bodyRollRate,
+        'body_pitch_rate': bodyPitchRate,
+        'body_yaw_rate': bodyYawRate,
+        'thrust': thrust,
+        'type_mask': typeMask,
+      };
 }
 
 /// Sets a desired vehicle position in a local north-east-down coordinate frame. Used by an external controller to command the vehicle (manual controller or other system).
@@ -18428,6 +19147,26 @@ class SetPositionTargetLocalNed implements MavlinkMessage {
     data_.setUint8(52, coordinateFrame);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'x': x,
+        'y': y,
+        'z': z,
+        'vx': vx,
+        'vy': vy,
+        'vz': vz,
+        'afx': afx,
+        'afy': afy,
+        'afz': afz,
+        'yaw': yaw,
+        'yaw_rate': yawRate,
+        'type_mask': typeMask,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'coordinate_frame': coordinateFrame,
+      };
 }
 
 /// Reports the current commanded vehicle position, velocity, and acceleration as specified by the autopilot. This should match the commands sent in SET_POSITION_TARGET_LOCAL_NED if the vehicle is being controlled this way.
@@ -18647,6 +19386,24 @@ class PositionTargetLocalNed implements MavlinkMessage {
     data_.setUint8(50, coordinateFrame);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'x': x,
+        'y': y,
+        'z': z,
+        'vx': vx,
+        'vy': vy,
+        'vz': vz,
+        'afx': afx,
+        'afy': afy,
+        'afz': afz,
+        'yaw': yaw,
+        'yaw_rate': yawRate,
+        'type_mask': typeMask,
+        'coordinate_frame': coordinateFrame,
+      };
 }
 
 /// Sets a desired vehicle position, velocity, and/or acceleration in a global coordinate system (WGS84). Used by an external controller to command the vehicle (manual controller or other system).
@@ -18888,6 +19645,26 @@ class SetPositionTargetGlobalInt implements MavlinkMessage {
     data_.setUint8(52, coordinateFrame);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'lat_int': latInt,
+        'lon_int': lonInt,
+        'alt': alt,
+        'vx': vx,
+        'vy': vy,
+        'vz': vz,
+        'afx': afx,
+        'afy': afy,
+        'afz': afz,
+        'yaw': yaw,
+        'yaw_rate': yawRate,
+        'type_mask': typeMask,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'coordinate_frame': coordinateFrame,
+      };
 }
 
 /// Reports the current commanded vehicle position, velocity, and acceleration as specified by the autopilot. This should match the commands sent in SET_POSITION_TARGET_GLOBAL_INT if the vehicle is being controlled this way.
@@ -19107,6 +19884,24 @@ class PositionTargetGlobalInt implements MavlinkMessage {
     data_.setUint8(50, coordinateFrame);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'lat_int': latInt,
+        'lon_int': lonInt,
+        'alt': alt,
+        'vx': vx,
+        'vy': vy,
+        'vz': vz,
+        'afx': afx,
+        'afy': afy,
+        'afz': afz,
+        'yaw': yaw,
+        'yaw_rate': yawRate,
+        'type_mask': typeMask,
+        'coordinate_frame': coordinateFrame,
+      };
 }
 
 /// The offset in X, Y, Z and yaw between the LOCAL_POSITION_NED messages of MAV X and the global coordinate frame in NED coordinates. Coordinate frame is right-handed, Z-axis down (aeronautical frame, NED / north-east-down convention)
@@ -19236,6 +20031,17 @@ class LocalPositionNedSystemGlobalOffset implements MavlinkMessage {
     data_.setFloat32(24, yaw, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'x': x,
+        'y': y,
+        'z': z,
+        'roll': roll,
+        'pitch': pitch,
+        'yaw': yaw,
+      };
 }
 
 /// Sent from simulation to autopilot. This packet is useful for high throughput applications such as hardware in the loop simulations.
@@ -19480,6 +20286,26 @@ class HilState implements MavlinkMessage {
     data_.setInt16(54, zacc, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'roll': roll,
+        'pitch': pitch,
+        'yaw': yaw,
+        'rollspeed': rollspeed,
+        'pitchspeed': pitchspeed,
+        'yawspeed': yawspeed,
+        'lat': lat,
+        'lon': lon,
+        'alt': alt,
+        'vx': vx,
+        'vy': vy,
+        'vz': vz,
+        'xacc': xacc,
+        'yacc': yacc,
+        'zacc': zacc,
+      };
 }
 
 /// Sent from autopilot to simulation. Hardware in the loop control outputs
@@ -19641,6 +20467,21 @@ class HilControls implements MavlinkMessage {
     data_.setUint8(41, navMode);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'roll_ailerons': rollAilerons,
+        'pitch_elevator': pitchElevator,
+        'yaw_rudder': yawRudder,
+        'throttle': throttle,
+        'aux1': aux1,
+        'aux2': aux2,
+        'aux3': aux3,
+        'aux4': aux4,
+        'mode': mode,
+        'nav_mode': navMode,
+      };
 }
 
 /// Sent from simulation to autopilot. The RAW values of the RC channels received. The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%. Individual receivers/transmitters might violate this specification.
@@ -19857,6 +20698,24 @@ class HilRcInputsRaw implements MavlinkMessage {
     data_.setUint8(32, rssi);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'chan1_raw': chan1Raw,
+        'chan2_raw': chan2Raw,
+        'chan3_raw': chan3Raw,
+        'chan4_raw': chan4Raw,
+        'chan5_raw': chan5Raw,
+        'chan6_raw': chan6Raw,
+        'chan7_raw': chan7Raw,
+        'chan8_raw': chan8Raw,
+        'chan9_raw': chan9Raw,
+        'chan10_raw': chan10Raw,
+        'chan11_raw': chan11Raw,
+        'chan12_raw': chan12Raw,
+        'rssi': rssi,
+      };
 }
 
 /// Sent from autopilot to simulation. Hardware in the loop control outputs (replacement for HIL_CONTROLS)
@@ -19938,6 +20797,14 @@ class HilActuatorControls implements MavlinkMessage {
     data_.setUint8(80, mode);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'flags': flags,
+        'controls': controls,
+        'mode': mode,
+      };
 }
 
 /// Optical flow from a flow sensor (e.g. optical mouse sensor)
@@ -20104,6 +20971,20 @@ class OpticalFlow implements MavlinkMessage {
     data_.setFloat32(30, flowRateY, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'flow_comp_m_x': flowCompMX,
+        'flow_comp_m_y': flowCompMY,
+        'ground_distance': groundDistance,
+        'flow_x': flowX,
+        'flow_y': flowY,
+        'sensor_id': sensorId,
+        'quality': quality,
+        'flow_rate_x': flowRateX,
+        'flow_rate_y': flowRateY,
+      };
 }
 
 /// Global position/attitude estimate from a vision source.
@@ -20259,6 +21140,19 @@ class GlobalVisionPositionEstimate implements MavlinkMessage {
     data_.setUint8(116, resetCounter);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'usec': usec,
+        'x': x,
+        'y': y,
+        'z': z,
+        'roll': roll,
+        'pitch': pitch,
+        'yaw': yaw,
+        'covariance': covariance,
+        'reset_counter': resetCounter,
+      };
 }
 
 /// Local position/attitude estimate from a vision source.
@@ -20413,6 +21307,19 @@ class VisionPositionEstimate implements MavlinkMessage {
     data_.setUint8(116, resetCounter);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'usec': usec,
+        'x': x,
+        'y': y,
+        'z': z,
+        'roll': roll,
+        'pitch': pitch,
+        'yaw': yaw,
+        'covariance': covariance,
+        'reset_counter': resetCounter,
+      };
 }
 
 /// Speed estimate from a vision source.
@@ -20527,6 +21434,16 @@ class VisionSpeedEstimate implements MavlinkMessage {
     data_.setUint8(56, resetCounter);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'usec': usec,
+        'x': x,
+        'y': y,
+        'z': z,
+        'covariance': covariance,
+        'reset_counter': resetCounter,
+      };
 }
 
 /// Global position estimate from a Vicon motion system source.
@@ -20668,6 +21585,18 @@ class ViconPositionEstimate implements MavlinkMessage {
     MavlinkMessage.setFloat32List(data_, 32, covariance);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'usec': usec,
+        'x': x,
+        'y': y,
+        'z': z,
+        'roll': roll,
+        'pitch': pitch,
+        'yaw': yaw,
+        'covariance': covariance,
+      };
 }
 
 /// The IMU readings in SI units in NED body frame
@@ -20910,6 +21839,26 @@ class HighresImu implements MavlinkMessage {
     data_.setUint8(62, id);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'xacc': xacc,
+        'yacc': yacc,
+        'zacc': zacc,
+        'xgyro': xgyro,
+        'ygyro': ygyro,
+        'zgyro': zgyro,
+        'xmag': xmag,
+        'ymag': ymag,
+        'zmag': zmag,
+        'abs_pressure': absPressure,
+        'diff_pressure': diffPressure,
+        'pressure_alt': pressureAlt,
+        'temperature': temperature,
+        'fields_updated': fieldsUpdated,
+        'id': id,
+      };
 }
 
 /// Optical flow from an angular rate flow sensor (e.g. PX4FLOW or mouse sensor)
@@ -21098,6 +22047,22 @@ class OpticalFlowRad implements MavlinkMessage {
     data_.setUint8(43, quality);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'integration_time_us': integrationTimeUs,
+        'integrated_x': integratedX,
+        'integrated_y': integratedY,
+        'integrated_xgyro': integratedXgyro,
+        'integrated_ygyro': integratedYgyro,
+        'integrated_zgyro': integratedZgyro,
+        'time_delta_distance_us': timeDeltaDistanceUs,
+        'distance': distance,
+        'temperature': temperature,
+        'sensor_id': sensorId,
+        'quality': quality,
+      };
 }
 
 /// The IMU readings in SI units in NED body frame
@@ -21340,6 +22305,26 @@ class HilSensor implements MavlinkMessage {
     data_.setUint8(64, id);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'xacc': xacc,
+        'yacc': yacc,
+        'zacc': zacc,
+        'xgyro': xgyro,
+        'ygyro': ygyro,
+        'zgyro': zgyro,
+        'xmag': xmag,
+        'ymag': ymag,
+        'zmag': zmag,
+        'abs_pressure': absPressure,
+        'diff_pressure': diffPressure,
+        'pressure_alt': pressureAlt,
+        'temperature': temperature,
+        'fields_updated': fieldsUpdated,
+        'id': id,
+      };
 }
 
 /// Status of simulation environment, if used
@@ -21661,6 +22646,33 @@ class SimState implements MavlinkMessage {
     data_.setInt32(88, lonInt, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'q1': q1,
+        'q2': q2,
+        'q3': q3,
+        'q4': q4,
+        'roll': roll,
+        'pitch': pitch,
+        'yaw': yaw,
+        'xacc': xacc,
+        'yacc': yacc,
+        'zacc': zacc,
+        'xgyro': xgyro,
+        'ygyro': ygyro,
+        'zgyro': zgyro,
+        'lat': lat,
+        'lon': lon,
+        'alt': alt,
+        'std_dev_horz': stdDevHorz,
+        'std_dev_vert': stdDevVert,
+        'vn': vn,
+        've': ve,
+        'vd': vd,
+        'lat_int': latInt,
+        'lon_int': lonInt,
+      };
 }
 
 /// Status generated by radio and injected into MAVLink stream.
@@ -21776,6 +22788,17 @@ class RadioStatus implements MavlinkMessage {
     data_.setUint8(8, remnoise);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'rxerrors': rxerrors,
+        'fixed': fixed,
+        'rssi': rssi,
+        'remrssi': remrssi,
+        'txbuf': txbuf,
+        'noise': noise,
+        'remnoise': remnoise,
+      };
 }
 
 /// File transfer protocol message: https://mavlink.io/en/services/ftp.html.
@@ -21856,6 +22879,14 @@ class FileTransferProtocol implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 3, payload);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_network': targetNetwork,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'payload': payload,
+      };
 }
 
 ///
@@ -21953,6 +22984,14 @@ class Timesync implements MavlinkMessage {
     data_.setUint8(17, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'tc1': tc1,
+        'ts1': ts1,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Camera-IMU triggering and synchronisation message.
@@ -22011,6 +23050,12 @@ class CameraTrigger implements MavlinkMessage {
     data_.setUint32(8, seq, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'seq': seq,
+      };
 }
 
 /// The global position, as returned by the Global Positioning System (GPS). This is
@@ -22237,6 +23282,25 @@ class HilGps implements MavlinkMessage {
     data_.setUint16(37, yaw, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'lat': lat,
+        'lon': lon,
+        'alt': alt,
+        'eph': eph,
+        'epv': epv,
+        'vel': vel,
+        'vn': vn,
+        've': ve,
+        'vd': vd,
+        'cog': cog,
+        'fix_type': fixType,
+        'satellites_visible': satellitesVisible,
+        'id': id,
+        'yaw': yaw,
+      };
 }
 
 /// Simulated optical flow from a flow sensor (e.g. PX4FLOW or optical mouse sensor)
@@ -22425,6 +23489,22 @@ class HilOpticalFlow implements MavlinkMessage {
     data_.setUint8(43, quality);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'integration_time_us': integrationTimeUs,
+        'integrated_x': integratedX,
+        'integrated_y': integratedY,
+        'integrated_xgyro': integratedXgyro,
+        'integrated_ygyro': integratedYgyro,
+        'integrated_zgyro': integratedZgyro,
+        'time_delta_distance_us': timeDeltaDistanceUs,
+        'distance': distance,
+        'temperature': temperature,
+        'sensor_id': sensorId,
+        'quality': quality,
+      };
 }
 
 /// Sent from simulation to autopilot, avoids in contrast to HIL_STATE singularities. This packet is useful for high throughput applications such as hardware in the loop simulations.
@@ -22667,6 +23747,26 @@ class HilStateQuaternion implements MavlinkMessage {
     data_.setInt16(62, zacc, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'attitude_quaternion': attitudeQuaternion,
+        'rollspeed': rollspeed,
+        'pitchspeed': pitchspeed,
+        'yawspeed': yawspeed,
+        'lat': lat,
+        'lon': lon,
+        'alt': alt,
+        'vx': vx,
+        'vy': vy,
+        'vz': vz,
+        'ind_airspeed': indAirspeed,
+        'true_airspeed': trueAirspeed,
+        'xacc': xacc,
+        'yacc': yacc,
+        'zacc': zacc,
+      };
 }
 
 /// The RAW IMU readings for secondary 9DOF sensor setup. This message should contain the scaled values to the described units
@@ -22848,6 +23948,21 @@ class ScaledImu2 implements MavlinkMessage {
     data_.setInt16(22, temperature, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'xacc': xacc,
+        'yacc': yacc,
+        'zacc': zacc,
+        'xgyro': xgyro,
+        'ygyro': ygyro,
+        'zgyro': zgyro,
+        'xmag': xmag,
+        'ymag': ymag,
+        'zmag': zmag,
+        'temperature': temperature,
+      };
 }
 
 /// Request a list of available logs. On some systems calling this may stop on-board logging until LOG_REQUEST_END is called. If there are no log files available this request shall be answered with one LOG_ENTRY message with id = 0 and num_logs = 0.
@@ -22928,6 +24043,14 @@ class LogRequestList implements MavlinkMessage {
     data_.setUint8(5, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'start': start,
+        'end': end,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Reply to LOG_REQUEST_LIST
@@ -23023,6 +24146,15 @@ class LogEntry implements MavlinkMessage {
     data_.setUint16(12, lastLogNum, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_utc': timeUtc,
+        'size': size,
+        'id': id,
+        'num_logs': numLogs,
+        'last_log_num': lastLogNum,
+      };
 }
 
 /// Request a chunk of a log
@@ -23116,6 +24248,15 @@ class LogRequestData implements MavlinkMessage {
     data_.setUint8(11, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'ofs': ofs,
+        'count': count,
+        'id': id,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Reply to LOG_REQUEST_DATA
@@ -23194,6 +24335,14 @@ class LogData implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 7, data);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'ofs': ofs,
+        'id': id,
+        'count': count,
+        'data': data,
+      };
 }
 
 /// Erase all logs
@@ -23251,6 +24400,12 @@ class LogErase implements MavlinkMessage {
     data_.setUint8(1, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Stop log transfer and resume normal logging
@@ -23308,6 +24463,12 @@ class LogRequestEnd implements MavlinkMessage {
     data_.setUint8(1, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Data for injecting into the onboard GPS (used for DGPS)
@@ -23390,6 +24551,14 @@ class GpsInjectData implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 3, data);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'len': len,
+        'data': data,
+      };
 }
 
 /// Second GPS data.
@@ -23664,6 +24833,28 @@ class Gps2Raw implements MavlinkMessage {
     data_.setUint32(53, hdgAcc, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'lat': lat,
+        'lon': lon,
+        'alt': alt,
+        'dgps_age': dgpsAge,
+        'eph': eph,
+        'epv': epv,
+        'vel': vel,
+        'cog': cog,
+        'fix_type': fixType,
+        'satellites_visible': satellitesVisible,
+        'dgps_numch': dgpsNumch,
+        'yaw': yaw,
+        'alt_ellipsoid': altEllipsoid,
+        'h_acc': hAcc,
+        'v_acc': vAcc,
+        'vel_acc': velAcc,
+        'hdg_acc': hdgAcc,
+      };
 }
 
 /// Power supply status
@@ -23736,6 +24927,13 @@ class PowerStatus implements MavlinkMessage {
     data_.setUint16(4, flags, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'Vcc': vcc,
+        'Vservo': vservo,
+        'flags': flags,
+      };
 }
 
 /// Control a serial port. This can be used for raw access to an onboard serial peripheral such as a GPS or telemetry radio. It is designed to make it possible to update the devices firmware via MAVLink messages or change the devices settings. A message with zero bytes can be used to change just the baudrate.
@@ -23874,6 +25072,18 @@ class SerialControl implements MavlinkMessage {
     data_.setUint8(80, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'baudrate': baudrate,
+        'timeout': timeout,
+        'device': device,
+        'flags': flags,
+        'count': count,
+        'data': data,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// RTK GPS data. Gives information on the relative baseline calculation the GPS is reporting
@@ -24067,6 +25277,23 @@ class GpsRtk implements MavlinkMessage {
     data_.setUint8(34, baselineCoordsType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_last_baseline_ms': timeLastBaselineMs,
+        'tow': tow,
+        'baseline_a_mm': baselineAMm,
+        'baseline_b_mm': baselineBMm,
+        'baseline_c_mm': baselineCMm,
+        'accuracy': accuracy,
+        'iar_num_hypotheses': iarNumHypotheses,
+        'wn': wn,
+        'rtk_receiver_id': rtkReceiverId,
+        'rtk_health': rtkHealth,
+        'rtk_rate': rtkRate,
+        'nsats': nsats,
+        'baseline_coords_type': baselineCoordsType,
+      };
 }
 
 /// RTK GPS data. Gives information on the relative baseline calculation the GPS is reporting
@@ -24260,6 +25487,23 @@ class Gps2Rtk implements MavlinkMessage {
     data_.setUint8(34, baselineCoordsType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_last_baseline_ms': timeLastBaselineMs,
+        'tow': tow,
+        'baseline_a_mm': baselineAMm,
+        'baseline_b_mm': baselineBMm,
+        'baseline_c_mm': baselineCMm,
+        'accuracy': accuracy,
+        'iar_num_hypotheses': iarNumHypotheses,
+        'wn': wn,
+        'rtk_receiver_id': rtkReceiverId,
+        'rtk_health': rtkHealth,
+        'rtk_rate': rtkRate,
+        'nsats': nsats,
+        'baseline_coords_type': baselineCoordsType,
+      };
 }
 
 /// The RAW IMU readings for 3rd 9DOF sensor setup. This message should contain the scaled values to the described units
@@ -24441,6 +25685,21 @@ class ScaledImu3 implements MavlinkMessage {
     data_.setInt16(22, temperature, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'xacc': xacc,
+        'yacc': yacc,
+        'zacc': zacc,
+        'xgyro': xgyro,
+        'ygyro': ygyro,
+        'zgyro': zgyro,
+        'xmag': xmag,
+        'ymag': ymag,
+        'zmag': zmag,
+        'temperature': temperature,
+      };
 }
 
 /// Handshake message to initiate, control and stop image streaming when using the Image Transmission Protocol: https://mavlink.io/en/services/image_transmission.html.
@@ -24563,6 +25822,17 @@ class DataTransmissionHandshake implements MavlinkMessage {
     data_.setUint8(12, jpgQuality);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'size': size,
+        'width': width,
+        'height': height,
+        'packets': packets,
+        'type': type,
+        'payload': payload,
+        'jpg_quality': jpgQuality,
+      };
 }
 
 /// Data packet for images sent using the Image Transmission Protocol: https://mavlink.io/en/services/image_transmission.html.
@@ -24619,6 +25889,12 @@ class EncapsulatedData implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 2, data);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'seqnr': seqnr,
+        'data': data,
+      };
 }
 
 /// Distance sensor information for an onboard rangefinder.
@@ -24815,6 +26091,22 @@ class DistanceSensor implements MavlinkMessage {
     data_.setUint8(38, signalQuality);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'min_distance': minDistance,
+        'max_distance': maxDistance,
+        'current_distance': currentDistance,
+        'type': type,
+        'id': id,
+        'orientation': orientation,
+        'covariance': covariance,
+        'horizontal_fov': horizontalFov,
+        'vertical_fov': verticalFov,
+        'quaternion': quaternion,
+        'signal_quality': signalQuality,
+      };
 }
 
 /// Request for terrain data and terrain status. See terrain protocol docs: https://mavlink.io/en/services/terrain.html
@@ -24898,6 +26190,14 @@ class TerrainRequest implements MavlinkMessage {
     data_.setUint16(16, gridSpacing, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'mask': mask,
+        'lat': lat,
+        'lon': lon,
+        'grid_spacing': gridSpacing,
+      };
 }
 
 /// Terrain data sent from GCS. The lat/lon and grid_spacing must be the same as a lat/lon from a TERRAIN_REQUEST. See terrain protocol docs: https://mavlink.io/en/services/terrain.html
@@ -24997,6 +26297,15 @@ class TerrainData implements MavlinkMessage {
     data_.setUint8(42, gridbit);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'lat': lat,
+        'lon': lon,
+        'grid_spacing': gridSpacing,
+        'data': data,
+        'gridbit': gridbit,
+      };
 }
 
 /// Request that the vehicle report terrain height at the given location (expected response is a TERRAIN_REPORT). Used by GCS to check if vehicle has all terrain data needed for a mission.
@@ -25057,6 +26366,12 @@ class TerrainCheck implements MavlinkMessage {
     data_.setInt32(4, lon, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'lat': lat,
+        'lon': lon,
+      };
 }
 
 /// Streamed from drone to report progress of terrain map download (initiated by TERRAIN_REQUEST), or sent as a response to a TERRAIN_CHECK request. See terrain protocol docs: https://mavlink.io/en/services/terrain.html
@@ -25178,6 +26493,17 @@ class TerrainReport implements MavlinkMessage {
     data_.setUint16(20, loaded, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'lat': lat,
+        'lon': lon,
+        'terrain_height': terrainHeight,
+        'current_height': currentHeight,
+        'spacing': spacing,
+        'pending': pending,
+        'loaded': loaded,
+      };
 }
 
 /// Barometer readings for 2nd barometer
@@ -25281,6 +26607,15 @@ class ScaledPressure2 implements MavlinkMessage {
     data_.setInt16(14, temperaturePressDiff, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'press_abs': pressAbs,
+        'press_diff': pressDiff,
+        'temperature': temperature,
+        'temperature_press_diff': temperaturePressDiff,
+      };
 }
 
 /// Motion capture attitude and position
@@ -25388,6 +26723,16 @@ class AttPosMocap implements MavlinkMessage {
     MavlinkMessage.setFloat32List(data_, 36, covariance);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'q': q,
+        'x': x,
+        'y': y,
+        'z': z,
+        'covariance': covariance,
+      };
 }
 
 /// Set the vehicle attitude and body angular rates.
@@ -25482,6 +26827,15 @@ class SetActuatorControlTarget implements MavlinkMessage {
     data_.setUint8(42, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'controls': controls,
+        'group_mlx': groupMlx,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Set the vehicle attitude and body angular rates.
@@ -25552,6 +26906,13 @@ class ActuatorControlTarget implements MavlinkMessage {
     data_.setUint8(40, groupMlx);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'controls': controls,
+        'group_mlx': groupMlx,
+      };
 }
 
 /// The current system altitude.
@@ -25679,6 +27040,17 @@ class Altitude implements MavlinkMessage {
     data_.setFloat32(28, bottomClearance, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'altitude_monotonic': altitudeMonotonic,
+        'altitude_amsl': altitudeAmsl,
+        'altitude_local': altitudeLocal,
+        'altitude_relative': altitudeRelative,
+        'altitude_terrain': altitudeTerrain,
+        'bottom_clearance': bottomClearance,
+      };
 }
 
 /// The autopilot is requesting a resource (file, binary, other type of data)
@@ -25770,6 +27142,15 @@ class ResourceRequest implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 123, storage);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'request_id': requestId,
+        'uri_type': uriType,
+        'uri': uri,
+        'transfer_type': transferType,
+        'storage': storage,
+      };
 }
 
 /// Barometer readings for 3rd barometer
@@ -25873,6 +27254,15 @@ class ScaledPressure3 implements MavlinkMessage {
     data_.setInt16(14, temperaturePressDiff, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'press_abs': pressAbs,
+        'press_diff': pressDiff,
+        'temperature': temperature,
+        'temperature_press_diff': temperaturePressDiff,
+      };
 }
 
 /// Current motion information from a designated system
@@ -26042,6 +27432,21 @@ class FollowTarget implements MavlinkMessage {
     data_.setUint8(92, estCapabilities);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'timestamp': timestamp,
+        'custom_state': customState,
+        'lat': lat,
+        'lon': lon,
+        'alt': alt,
+        'vel': vel,
+        'acc': acc,
+        'attitude_q': attitudeQ,
+        'rates': rates,
+        'position_cov': positionCov,
+        'est_capabilities': estCapabilities,
+      };
 }
 
 /// The smoothed, monotonic system state used to feed the control loops of the system.
@@ -26293,6 +27698,27 @@ class ControlSystemState implements MavlinkMessage {
     data_.setFloat32(96, yawRate, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'x_acc': xAcc,
+        'y_acc': yAcc,
+        'z_acc': zAcc,
+        'x_vel': xVel,
+        'y_vel': yVel,
+        'z_vel': zVel,
+        'x_pos': xPos,
+        'y_pos': yPos,
+        'z_pos': zPos,
+        'airspeed': airspeed,
+        'vel_variance': velVariance,
+        'pos_variance': posVariance,
+        'q': q,
+        'roll_rate': rollRate,
+        'pitch_rate': pitchRate,
+        'yaw_rate': yawRate,
+      };
 }
 
 /// Battery information. Updates GCS with flight controller battery status. Smart batteries also use this message, but may additionally send BATTERY_INFO.
@@ -26519,6 +27945,24 @@ class BatteryStatus implements MavlinkMessage {
     data_.setUint32(50, faultBitmask, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'current_consumed': currentConsumed,
+        'energy_consumed': energyConsumed,
+        'temperature': temperature,
+        'voltages': voltages,
+        'current_battery': currentBattery,
+        'id': id,
+        'battery_function': batteryFunction,
+        'type': type,
+        'battery_remaining': batteryRemaining,
+        'time_remaining': timeRemaining,
+        'charge_state': chargeState,
+        'voltages_ext': voltagesExt,
+        'mode': mode,
+        'fault_bitmask': faultBitmask,
+      };
 }
 
 /// Version and capability of autopilot software. This should be emitted in response to a request with MAV_CMD_REQUEST_MESSAGE.
@@ -26691,6 +28135,22 @@ class AutopilotVersion implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 60, uid2);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'capabilities': capabilities,
+        'uid': uid,
+        'flight_sw_version': flightSwVersion,
+        'middleware_sw_version': middlewareSwVersion,
+        'os_sw_version': osSwVersion,
+        'board_version': boardVersion,
+        'vendor_id': vendorId,
+        'product_id': productId,
+        'flight_custom_version': flightCustomVersion,
+        'middleware_custom_version': middlewareCustomVersion,
+        'os_custom_version': osCustomVersion,
+        'uid2': uid2,
+      };
 }
 
 /// The location of a landing target. See: https://mavlink.io/en/services/landing_target.html
@@ -26915,6 +28375,24 @@ class LandingTarget implements MavlinkMessage {
     data_.setUint8(59, positionValid);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'angle_x': angleX,
+        'angle_y': angleY,
+        'distance': distance,
+        'size_x': sizeX,
+        'size_y': sizeY,
+        'target_num': targetNum,
+        'frame': frame,
+        'x': x,
+        'y': y,
+        'z': z,
+        'q': q,
+        'type': type,
+        'position_valid': positionValid,
+      };
 }
 
 /// Status of geo-fencing. Sent in extended status stream when fencing enabled.
@@ -27014,6 +28492,15 @@ class FenceStatus implements MavlinkMessage {
     data_.setUint8(8, breachMitigation);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'breach_time': breachTime,
+        'breach_count': breachCount,
+        'breach_status': breachStatus,
+        'breach_type': breachType,
+        'breach_mitigation': breachMitigation,
+      };
 }
 
 /// Reports results of completed compass calibration. Sent until MAG_CAL_ACK received.
@@ -27264,6 +28751,28 @@ class MagCalReport implements MavlinkMessage {
     data_.setFloat32(50, scaleFactor, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'fitness': fitness,
+        'ofs_x': ofsX,
+        'ofs_y': ofsY,
+        'ofs_z': ofsZ,
+        'diag_x': diagX,
+        'diag_y': diagY,
+        'diag_z': diagZ,
+        'offdiag_x': offdiagX,
+        'offdiag_y': offdiagY,
+        'offdiag_z': offdiagZ,
+        'compass_id': compassId,
+        'cal_mask': calMask,
+        'cal_status': calStatus,
+        'autosaved': autosaved,
+        'orientation_confidence': orientationConfidence,
+        'old_orientation': oldOrientation,
+        'new_orientation': newOrientation,
+        'scale_factor': scaleFactor,
+      };
 }
 
 /// EFI status output
@@ -27543,6 +29052,29 @@ class EfiStatus implements MavlinkMessage {
     data_.setFloat32(69, fuelPressure, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'ecu_index': ecuIndex,
+        'rpm': rpm,
+        'fuel_consumed': fuelConsumed,
+        'fuel_flow': fuelFlow,
+        'engine_load': engineLoad,
+        'throttle_position': throttlePosition,
+        'spark_dwell_time': sparkDwellTime,
+        'barometric_pressure': barometricPressure,
+        'intake_manifold_pressure': intakeManifoldPressure,
+        'intake_manifold_temperature': intakeManifoldTemperature,
+        'cylinder_head_temperature': cylinderHeadTemperature,
+        'ignition_timing': ignitionTiming,
+        'injection_time': injectionTime,
+        'exhaust_gas_temperature': exhaustGasTemperature,
+        'throttle_out': throttleOut,
+        'pt_compensation': ptCompensation,
+        'health': health,
+        'ignition_voltage': ignitionVoltage,
+        'fuel_pressure': fuelPressure,
+      };
 }
 
 /// Estimator status message including flags, innovation test ratios and estimated accuracies. The flags message is an integer bitmask containing information on which EKF outputs are valid. See the ESTIMATOR_STATUS_FLAGS enum definition for further information. The innovation test ratios show the magnitude of the sensor innovation divided by the innovation check threshold. Under normal operation the innovation test ratios should be below 0.5 with occasional values up to 1.0. Values greater than 1.0 should be rare under normal operation and indicate that a measurement has been rejected by the filter. The user should be notified if an innovation test ratio greater than 1.0 is recorded. Notifications for values in the range between 0.5 and 1.0 should be optional and controllable by the user.
@@ -27697,6 +29229,20 @@ class EstimatorStatus implements MavlinkMessage {
     data_.setUint16(40, flags, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'vel_ratio': velRatio,
+        'pos_horiz_ratio': posHorizRatio,
+        'pos_vert_ratio': posVertRatio,
+        'mag_ratio': magRatio,
+        'hagl_ratio': haglRatio,
+        'tas_ratio': tasRatio,
+        'pos_horiz_accuracy': posHorizAccuracy,
+        'pos_vert_accuracy': posVertAccuracy,
+        'flags': flags,
+      };
 }
 
 /// Wind estimate from vehicle. Note that despite the name, this message does not actually contain any covariances but instead variability and accuracy fields in terms of standard deviation (1-STD).
@@ -27850,6 +29396,19 @@ class WindCov implements MavlinkMessage {
     data_.setFloat32(36, vertAccuracy, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'wind_x': windX,
+        'wind_y': windY,
+        'wind_z': windZ,
+        'var_horiz': varHoriz,
+        'var_vert': varVert,
+        'wind_alt': windAlt,
+        'horiz_accuracy': horizAccuracy,
+        'vert_accuracy': vertAccuracy,
+      };
 }
 
 /// GPS sensor input message.  This is a raw sensor value sent by the GPS. This is NOT the global position estimate of the system.
@@ -28123,6 +29682,29 @@ class GpsInput implements MavlinkMessage {
     data_.setUint16(63, yaw, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'time_week_ms': timeWeekMs,
+        'lat': lat,
+        'lon': lon,
+        'alt': alt,
+        'hdop': hdop,
+        'vdop': vdop,
+        'vn': vn,
+        've': ve,
+        'vd': vd,
+        'speed_accuracy': speedAccuracy,
+        'horiz_accuracy': horizAccuracy,
+        'vert_accuracy': vertAccuracy,
+        'ignore_flags': ignoreFlags,
+        'time_week': timeWeek,
+        'gps_id': gpsId,
+        'fix_type': fixType,
+        'satellites_visible': satellitesVisible,
+        'yaw': yaw,
+      };
 }
 
 /// RTCM message for injecting into the onboard GPS (used for DGPS)
@@ -28191,6 +29773,13 @@ class GpsRtcmData implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 2, data);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'flags': flags,
+        'len': len,
+        'data': data,
+      };
 }
 
 /// Message appropriate for high latency connections like Iridium
@@ -28531,6 +30120,34 @@ class HighLatency implements MavlinkMessage {
     data_.setUint8(39, wpNum);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'custom_mode': customMode,
+        'latitude': latitude,
+        'longitude': longitude,
+        'roll': roll,
+        'pitch': pitch,
+        'heading': heading,
+        'heading_sp': headingSp,
+        'altitude_amsl': altitudeAmsl,
+        'altitude_sp': altitudeSp,
+        'wp_distance': wpDistance,
+        'base_mode': baseMode,
+        'landed_state': landedState,
+        'throttle': throttle,
+        'airspeed': airspeed,
+        'airspeed_sp': airspeedSp,
+        'groundspeed': groundspeed,
+        'climb_rate': climbRate,
+        'gps_nsat': gpsNsat,
+        'gps_fix_type': gpsFixType,
+        'battery_remaining': batteryRemaining,
+        'temperature': temperature,
+        'temperature_air': temperatureAir,
+        'failsafe': failsafe,
+        'wp_num': wpNum,
+      };
 }
 
 /// Message appropriate for high latency connections like Iridium (version 2)
@@ -28908,6 +30525,37 @@ class HighLatency2 implements MavlinkMessage {
     data_.setInt8(41, custom2);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'timestamp': timestamp,
+        'latitude': latitude,
+        'longitude': longitude,
+        'custom_mode': customMode,
+        'altitude': altitude,
+        'target_altitude': targetAltitude,
+        'target_distance': targetDistance,
+        'wp_num': wpNum,
+        'failure_flags': failureFlags,
+        'type': type,
+        'autopilot': autopilot,
+        'heading': heading,
+        'target_heading': targetHeading,
+        'throttle': throttle,
+        'airspeed': airspeed,
+        'airspeed_sp': airspeedSp,
+        'groundspeed': groundspeed,
+        'windspeed': windspeed,
+        'wind_heading': windHeading,
+        'eph': eph,
+        'epv': epv,
+        'temperature_air': temperatureAir,
+        'climb_rate': climbRate,
+        'battery': battery,
+        'custom0': custom0,
+        'custom1': custom1,
+        'custom2': custom2,
+      };
 }
 
 /// Vibration levels and accelerometer clipping
@@ -29023,6 +30671,17 @@ class Vibration implements MavlinkMessage {
     data_.setUint32(28, clipping2, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'vibration_x': vibrationX,
+        'vibration_y': vibrationY,
+        'vibration_z': vibrationZ,
+        'clipping_0': clipping0,
+        'clipping_1': clipping1,
+        'clipping_2': clipping2,
+      };
 }
 
 ///
@@ -29214,6 +30873,21 @@ class HomePosition implements MavlinkMessage {
     data_.setUint64(52, timeUsec, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'latitude': latitude,
+        'longitude': longitude,
+        'altitude': altitude,
+        'x': x,
+        'y': y,
+        'z': z,
+        'q': q,
+        'approach_x': approachX,
+        'approach_y': approachY,
+        'approach_z': approachZ,
+        'time_usec': timeUsec,
+      };
 }
 
 ///
@@ -29412,6 +31086,22 @@ class SetHomePosition implements MavlinkMessage {
     data_.setUint64(53, timeUsec, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'latitude': latitude,
+        'longitude': longitude,
+        'altitude': altitude,
+        'x': x,
+        'y': y,
+        'z': z,
+        'q': q,
+        'approach_x': approachX,
+        'approach_y': approachY,
+        'approach_z': approachZ,
+        'target_system': targetSystem,
+        'time_usec': timeUsec,
+      };
 }
 
 ///
@@ -29474,6 +31164,12 @@ class MessageInterval implements MavlinkMessage {
     data_.setUint16(4, messageId, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'interval_us': intervalUs,
+        'message_id': messageId,
+      };
 }
 
 /// Provides state for additional features
@@ -29534,6 +31230,12 @@ class ExtendedSysState implements MavlinkMessage {
     data_.setUint8(1, landedState);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'vtol_state': vtolState,
+        'landed_state': landedState,
+      };
 }
 
 /// The location and information of an ADSB vehicle
@@ -29733,6 +31435,23 @@ class AdsbVehicle implements MavlinkMessage {
     data_.setUint8(37, tslc);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'ICAO_address': icaoAddress,
+        'lat': lat,
+        'lon': lon,
+        'altitude': altitude,
+        'heading': heading,
+        'hor_velocity': horVelocity,
+        'ver_velocity': verVelocity,
+        'flags': flags,
+        'squawk': squawk,
+        'altitude_type': altitudeType,
+        'callsign': callsign,
+        'emitter_type': emitterType,
+        'tslc': tslc,
+      };
 }
 
 /// Information about a potential collision
@@ -29858,6 +31577,17 @@ class Collision implements MavlinkMessage {
     data_.setUint8(18, threatLevel);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'time_to_minimum_delta': timeToMinimumDelta,
+        'altitude_minimum_delta': altitudeMinimumDelta,
+        'horizontal_minimum_delta': horizontalMinimumDelta,
+        'src': src,
+        'action': action,
+        'threat_level': threatLevel,
+      };
 }
 
 /// Message implementing parts of the V2 payload specs in V1 frames for transitional support.
@@ -29949,6 +31679,15 @@ class V2Extension implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 5, payload);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'message_type': messageType,
+        'target_network': targetNetwork,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'payload': payload,
+      };
 }
 
 /// Send raw controller memory. The use of this message is discouraged for normal packets, but a quite efficient way for testing new messages and getting experimental debug output.
@@ -30025,6 +31764,14 @@ class MemoryVect implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 4, value);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'address': address,
+        'ver': ver,
+        'type': type,
+        'value': value,
+      };
 }
 
 /// To debug something using a named 3D vector.
@@ -30113,6 +31860,15 @@ class DebugVect implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 20, name);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'x': x,
+        'y': y,
+        'z': z,
+        'name': name,
+      };
 }
 
 /// Send a key-value pair as float. The use of this message is discouraged for normal packets, but a quite efficient way for testing new messages and getting experimental debug output.
@@ -30181,6 +31937,13 @@ class NamedValueFloat implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 8, name);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'value': value,
+        'name': name,
+      };
 }
 
 /// Send a key-value pair as integer. The use of this message is discouraged for normal packets, but a quite efficient way for testing new messages and getting experimental debug output.
@@ -30249,6 +32012,13 @@ class NamedValueInt implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 8, name);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'value': value,
+        'name': name,
+      };
 }
 
 /// Status text message. These messages are printed in yellow in the COMM console of QGroundControl. WARNING: They consume quite some bandwidth, so use only for important status and error messages. If implemented wisely, these messages are buffered on the MCU and sent only at a limited rate (e.g. 10 Hz).
@@ -30332,6 +32102,14 @@ class Statustext implements MavlinkMessage {
     data_.setUint8(53, chunkSeq);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'severity': severity,
+        'text': text,
+        'id': id,
+        'chunk_seq': chunkSeq,
+      };
 }
 
 /// Send a debug value. The index is used to discriminate between values. These values show up in the plot of QGroundControl as DEBUG N.
@@ -30400,6 +32178,13 @@ class Debug implements MavlinkMessage {
     data_.setUint8(8, ind);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'value': value,
+        'ind': ind,
+      };
 }
 
 /// Setup a MAVLink2 signing key. If called with secret_key of all zero and zero initial_timestamp will disable signing
@@ -30480,6 +32265,14 @@ class SetupSigning implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 10, secretKey);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'initial_timestamp': initialTimestamp,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'secret_key': secretKey,
+      };
 }
 
 /// Report button state change.
@@ -30551,6 +32344,13 @@ class ButtonChange implements MavlinkMessage {
     data_.setUint8(8, state);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'last_change_ms': lastChangeMs,
+        'state': state,
+      };
 }
 
 /// Control vehicle tone generation (buzzer).
@@ -30633,6 +32433,14 @@ class PlayTune implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 32, tune2);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'tune': tune,
+        'tune2': tune2,
+      };
 }
 
 /// Information about a camera. Can be requested with a MAV_CMD_REQUEST_MESSAGE command.
@@ -30839,6 +32647,24 @@ class CameraInformation implements MavlinkMessage {
     data_.setUint8(235, gimbalDeviceId);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'firmware_version': firmwareVersion,
+        'focal_length': focalLength,
+        'sensor_size_h': sensorSizeH,
+        'sensor_size_v': sensorSizeV,
+        'flags': flags,
+        'resolution_h': resolutionH,
+        'resolution_v': resolutionV,
+        'cam_definition_version': camDefinitionVersion,
+        'vendor_name': vendorName,
+        'model_name': modelName,
+        'lens_id': lensId,
+        'cam_definition_uri': camDefinitionUri,
+        'gimbal_device_id': gimbalDeviceId,
+      };
 }
 
 /// Settings of a camera. Can be requested with a MAV_CMD_REQUEST_MESSAGE command.
@@ -30927,6 +32753,14 @@ class CameraSettings implements MavlinkMessage {
     data_.setFloat32(9, focuslevel, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'mode_id': modeId,
+        'zoomLevel': zoomlevel,
+        'focusLevel': focuslevel,
+      };
 }
 
 /// Information about a storage medium. This message is sent in response to a request with MAV_CMD_REQUEST_MESSAGE and whenever the status of the storage changes (STORAGE_STATUS). Use MAV_CMD_REQUEST_MESSAGE.param2 to indicate the index/id of requested storage: 0 for all, 1 for first, 2 for second, etc.
@@ -31122,6 +32956,22 @@ class StorageInformation implements MavlinkMessage {
     data_.setUint8(60, storageUsage);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'total_capacity': totalCapacity,
+        'used_capacity': usedCapacity,
+        'available_capacity': availableCapacity,
+        'read_speed': readSpeed,
+        'write_speed': writeSpeed,
+        'storage_id': storageId,
+        'storage_count': storageCount,
+        'status': status,
+        'type': type,
+        'name': name,
+        'storage_usage': storageUsage,
+      };
 }
 
 /// Information about the status of a capture. Can be requested with a MAV_CMD_REQUEST_MESSAGE command.
@@ -31245,6 +33095,17 @@ class CameraCaptureStatus implements MavlinkMessage {
     data_.setInt32(18, imageCount, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'image_interval': imageInterval,
+        'recording_time_ms': recordingTimeMs,
+        'available_capacity': availableCapacity,
+        'image_status': imageStatus,
+        'video_status': videoStatus,
+        'image_count': imageCount,
+      };
 }
 
 /// Information about a captured image. This is emitted every time a message is captured.
@@ -31420,6 +33281,21 @@ class CameraImageCaptured implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 50, fileUrl);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_utc': timeUtc,
+        'time_boot_ms': timeBootMs,
+        'lat': lat,
+        'lon': lon,
+        'alt': alt,
+        'relative_alt': relativeAlt,
+        'q': q,
+        'image_index': imageIndex,
+        'camera_id': cameraId,
+        'capture_result': captureResult,
+        'file_url': fileUrl,
+      };
 }
 
 /// Flight information.
@@ -31526,6 +33402,15 @@ class FlightInformation implements MavlinkMessage {
     data_.setUint32(28, landingTime, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'arming_time_utc': armingTimeUtc,
+        'takeoff_time_utc': takeoffTimeUtc,
+        'flight_uuid': flightUuid,
+        'time_boot_ms': timeBootMs,
+        'landing_time': landingTime,
+      };
 }
 
 /// Orientation of a mount
@@ -31629,6 +33514,15 @@ class MountOrientation implements MavlinkMessage {
     data_.setFloat32(16, yawAbsolute, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'roll': roll,
+        'pitch': pitch,
+        'yaw': yaw,
+        'yaw_absolute': yawAbsolute,
+      };
 }
 
 /// A message containing logged data (see also MAV_CMD_LOGGING_START)
@@ -31735,6 +33629,16 @@ class LoggingData implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 6, data);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'sequence': sequence,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'length': length,
+        'first_message_offset': firstMessageOffset,
+        'data': data,
+      };
 }
 
 /// A message containing logged data which requires a LOGGING_ACK to be sent back
@@ -31841,6 +33745,16 @@ class LoggingDataAcked implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 6, data);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'sequence': sequence,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'length': length,
+        'first_message_offset': firstMessageOffset,
+        'data': data,
+      };
 }
 
 /// An ack for a LOGGING_DATA_ACKED message
@@ -31910,6 +33824,13 @@ class LoggingAck implements MavlinkMessage {
     data_.setUint8(3, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'sequence': sequence,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Information about video stream. It may be requested using MAV_CMD_REQUEST_MESSAGE, where param2 indicates the video stream id: 0 for all streams, 1 for first, 2 for second, etc.
@@ -32095,6 +34016,22 @@ class VideoStreamInformation implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 53, uri);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'framerate': framerate,
+        'bitrate': bitrate,
+        'flags': flags,
+        'resolution_h': resolutionH,
+        'resolution_v': resolutionV,
+        'rotation': rotation,
+        'hfov': hfov,
+        'stream_id': streamId,
+        'count': count,
+        'type': type,
+        'name': name,
+        'uri': uri,
+      };
 }
 
 /// Information about the status of a video stream. It may be requested using MAV_CMD_REQUEST_MESSAGE.
@@ -32233,6 +34170,18 @@ class VideoStreamStatus implements MavlinkMessage {
     data_.setUint8(18, streamId);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'framerate': framerate,
+        'bitrate': bitrate,
+        'flags': flags,
+        'resolution_h': resolutionH,
+        'resolution_v': resolutionV,
+        'rotation': rotation,
+        'hfov': hfov,
+        'stream_id': streamId,
+      };
 }
 
 /// Information about the field of view of a camera. Can be requested with a MAV_CMD_REQUEST_MESSAGE command.
@@ -32397,6 +34346,20 @@ class CameraFovStatus implements MavlinkMessage {
     data_.setFloat32(48, vfov, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'lat_camera': latCamera,
+        'lon_camera': lonCamera,
+        'alt_camera': altCamera,
+        'lat_image': latImage,
+        'lon_image': lonImage,
+        'alt_image': altImage,
+        'q': q,
+        'hfov': hfov,
+        'vfov': vfov,
+      };
 }
 
 /// Camera tracking status, sent while in active tracking. Use MAV_CMD_SET_MESSAGE_INTERVAL to define message interval.
@@ -32550,6 +34513,20 @@ class CameraTrackingImageStatus implements MavlinkMessage {
     data_.setUint8(30, targetData);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'point_x': pointX,
+        'point_y': pointY,
+        'radius': radius,
+        'rec_top_x': recTopX,
+        'rec_top_y': recTopY,
+        'rec_bottom_x': recBottomX,
+        'rec_bottom_y': recBottomY,
+        'tracking_status': trackingStatus,
+        'tracking_mode': trackingMode,
+        'target_data': targetData,
+      };
 }
 
 /// Camera tracking status, sent while in active tracking. Use MAV_CMD_SET_MESSAGE_INTERVAL to define message interval.
@@ -32756,6 +34733,23 @@ class CameraTrackingGeoStatus implements MavlinkMessage {
     data_.setUint8(48, trackingStatus);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'lat': lat,
+        'lon': lon,
+        'alt': alt,
+        'h_acc': hAcc,
+        'v_acc': vAcc,
+        'vel_n': velN,
+        'vel_e': velE,
+        'vel_d': velD,
+        'vel_acc': velAcc,
+        'dist': dist,
+        'hdg': hdg,
+        'hdg_acc': hdgAcc,
+        'tracking_status': trackingStatus,
+      };
 }
 
 /// Information about a high level gimbal manager. This message should be requested by a ground station using MAV_CMD_REQUEST_MESSAGE.
@@ -32908,6 +34902,19 @@ class GimbalManagerInformation implements MavlinkMessage {
     data_.setUint8(32, gimbalDeviceId);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'cap_flags': capFlags,
+        'roll_min': rollMin,
+        'roll_max': rollMax,
+        'pitch_min': pitchMin,
+        'pitch_max': pitchMax,
+        'yaw_min': yawMin,
+        'yaw_max': yawMax,
+        'gimbal_device_id': gimbalDeviceId,
+      };
 }
 
 /// Current status about a high level gimbal manager. This message should be broadcast at a low regular rate (e.g. 5Hz).
@@ -33025,6 +35032,17 @@ class GimbalManagerStatus implements MavlinkMessage {
     data_.setUint8(12, secondaryControlCompid);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'flags': flags,
+        'gimbal_device_id': gimbalDeviceId,
+        'primary_control_sysid': primaryControlSysid,
+        'primary_control_compid': primaryControlCompid,
+        'secondary_control_sysid': secondaryControlSysid,
+        'secondary_control_compid': secondaryControlCompid,
+      };
 }
 
 /// High level message to control a gimbal's attitude. This message is to be sent to the gimbal manager (e.g. from a ground station). Angles and rates can be set to NaN according to use case.
@@ -33158,6 +35176,18 @@ class GimbalManagerSetAttitude implements MavlinkMessage {
     data_.setUint8(34, gimbalDeviceId);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'flags': flags,
+        'q': q,
+        'angular_velocity_x': angularVelocityX,
+        'angular_velocity_y': angularVelocityY,
+        'angular_velocity_z': angularVelocityZ,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'gimbal_device_id': gimbalDeviceId,
+      };
 }
 
 /// Information about a low level gimbal. This message should be requested by the gimbal manager or a ground station using MAV_CMD_REQUEST_MESSAGE. The maximum angles and rates are the limits by hardware. However, the limits by software used are likely different/smaller and dependent on mode/settings/etc..
@@ -33389,6 +35419,26 @@ class GimbalDeviceInformation implements MavlinkMessage {
     data_.setUint8(144, gimbalDeviceId);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'uid': uid,
+        'time_boot_ms': timeBootMs,
+        'firmware_version': firmwareVersion,
+        'hardware_version': hardwareVersion,
+        'roll_min': rollMin,
+        'roll_max': rollMax,
+        'pitch_min': pitchMin,
+        'pitch_max': pitchMax,
+        'yaw_min': yawMin,
+        'yaw_max': yawMax,
+        'cap_flags': capFlags,
+        'custom_cap_flags': customCapFlags,
+        'vendor_name': vendorName,
+        'model_name': modelName,
+        'custom_name': customName,
+        'gimbal_device_id': gimbalDeviceId,
+      };
 }
 
 /// Low level message to control a gimbal device's attitude.
@@ -33522,6 +35572,17 @@ class GimbalDeviceSetAttitude implements MavlinkMessage {
     data_.setUint8(31, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'q': q,
+        'angular_velocity_x': angularVelocityX,
+        'angular_velocity_y': angularVelocityY,
+        'angular_velocity_z': angularVelocityZ,
+        'flags': flags,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Message reporting the status of a gimbal device.
@@ -33727,6 +35788,22 @@ class GimbalDeviceAttitudeStatus implements MavlinkMessage {
     data_.setUint8(48, gimbalDeviceId);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'q': q,
+        'angular_velocity_x': angularVelocityX,
+        'angular_velocity_y': angularVelocityY,
+        'angular_velocity_z': angularVelocityZ,
+        'failure_flags': failureFlags,
+        'flags': flags,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'delta_yaw': deltaYaw,
+        'delta_yaw_velocity': deltaYawVelocity,
+        'gimbal_device_id': gimbalDeviceId,
+      };
 }
 
 /// Low level message containing autopilot state relevant for a gimbal device. This message is to be sent from the autopilot to the gimbal device component. The data of this message are for the gimbal device's estimator corrections, in particular horizon compensation, as well as indicates autopilot control intentions, e.g. feed forward angular control in the z-axis.
@@ -33930,6 +36007,23 @@ class AutopilotStateForGimbalDevice implements MavlinkMessage {
     data_.setFloat32(53, angularVelocityZ, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_us': timeBootUs,
+        'q': q,
+        'q_estimated_delay_us': qEstimatedDelayUs,
+        'vx': vx,
+        'vy': vy,
+        'vz': vz,
+        'v_estimated_delay_us': vEstimatedDelayUs,
+        'feed_forward_angular_velocity_z': feedForwardAngularVelocityZ,
+        'estimator_status': estimatorStatus,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'landed_state': landedState,
+        'angular_velocity_z': angularVelocityZ,
+      };
 }
 
 /// Set gimbal manager pitch and yaw angles (high rate message). This message is to be sent to the gimbal manager (e.g. from a ground station) and will be ignored by gimbal devices. Angles and rates can be set to NaN according to use case. Use MAV_CMD_DO_GIMBAL_MANAGER_PITCHYAW for low-rate adjustments that require confirmation.
@@ -34065,6 +36159,18 @@ class GimbalManagerSetPitchyaw implements MavlinkMessage {
     data_.setUint8(22, gimbalDeviceId);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'flags': flags,
+        'pitch': pitch,
+        'yaw': yaw,
+        'pitch_rate': pitchRate,
+        'yaw_rate': yawRate,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'gimbal_device_id': gimbalDeviceId,
+      };
 }
 
 /// High level message to control a gimbal manually. The angles or angular rates are unitless; the actual rates will depend on internal gimbal manager settings/configuration (e.g. set by parameters). This message is to be sent to the gimbal manager (e.g. from a ground station). Angles and rates can be set to NaN according to use case.
@@ -34193,6 +36299,18 @@ class GimbalManagerSetManualControl implements MavlinkMessage {
     data_.setUint8(22, gimbalDeviceId);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'flags': flags,
+        'pitch': pitch,
+        'yaw': yaw,
+        'pitch_rate': pitchRate,
+        'yaw_rate': yawRate,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'gimbal_device_id': gimbalDeviceId,
+      };
 }
 
 /// ESC information for lower rate streaming. Recommended streaming rate 1Hz. See ESC_STATUS for higher-rate ESC data.
@@ -34336,6 +36454,19 @@ class EscInfo implements MavlinkMessage {
     data_.setUint8(45, info);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'error_count': errorCount,
+        'counter': counter,
+        'failure_flags': failureFlags,
+        'temperature': temperature,
+        'index': index,
+        'count': count,
+        'connection_type': connectionType,
+        'info': info,
+      };
 }
 
 /// ESC information for higher rate streaming. Recommended streaming rate is ~10 Hz. Information that changes more slowly is sent in ESC_INFO. It should typically only be streamed on high-bandwidth links (i.e. to a companion computer).
@@ -34435,6 +36566,15 @@ class EscStatus implements MavlinkMessage {
     data_.setUint8(56, index);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'rpm': rpm,
+        'voltage': voltage,
+        'current': current,
+        'index': index,
+      };
 }
 
 /// Configure WiFi AP SSID, password, and mode. This message is re-emitted as an acknowledgement by the AP. The message may also be explicitly requested using MAV_CMD_REQUEST_MESSAGE
@@ -34520,6 +36660,14 @@ class WifiConfigAp implements MavlinkMessage {
     data_.setInt8(97, response);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'ssid': ssid,
+        'password': password,
+        'mode': mode,
+        'response': response,
+      };
 }
 
 /// The location and information of an AIS vessel
@@ -34771,6 +36919,27 @@ class AisVessel implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 38, name);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'MMSI': mmsi,
+        'lat': lat,
+        'lon': lon,
+        'COG': cog,
+        'heading': heading,
+        'velocity': velocity,
+        'dimension_bow': dimensionBow,
+        'dimension_stern': dimensionStern,
+        'tslc': tslc,
+        'flags': flags,
+        'turn_rate': turnRate,
+        'navigational_status': navigationalStatus,
+        'type': type,
+        'dimension_port': dimensionPort,
+        'dimension_starboard': dimensionStarboard,
+        'callsign': callsign,
+        'name': name,
+      };
 }
 
 /// General status information of an UAVCAN node. Please refer to the definition of the UAVCAN message "uavcan.protocol.NodeStatus" for the background information. The UAVCAN specification is available at http://uavcan.org.
@@ -34881,6 +37050,16 @@ class UavcanNodeStatus implements MavlinkMessage {
     data_.setUint8(16, subMode);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'uptime_sec': uptimeSec,
+        'vendor_specific_status_code': vendorSpecificStatusCode,
+        'health': health,
+        'mode': mode,
+        'sub_mode': subMode,
+      };
 }
 
 /// General information describing a particular UAVCAN node. Please refer to the definition of the UAVCAN service "uavcan.protocol.GetNodeInfo" for the background information. This message should be emitted by the system whenever a new node appears online, or an existing node reboots. Additionally, it can be emitted upon request from the other end of the MAVLink channel (see MAV_CMD_UAVCAN_GET_NODE_INFO). It is also not prohibited to emit this message unconditionally at a low frequency. The UAVCAN specification is available at http://uavcan.org.
@@ -35020,6 +37199,19 @@ class UavcanNodeInfo implements MavlinkMessage {
     data_.setUint8(115, swVersionMinor);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'uptime_sec': uptimeSec,
+        'sw_vcs_commit': swVcsCommit,
+        'name': name,
+        'hw_version_major': hwVersionMajor,
+        'hw_version_minor': hwVersionMinor,
+        'hw_unique_id': hwUniqueId,
+        'sw_version_major': swVersionMajor,
+        'sw_version_minor': swVersionMinor,
+      };
 }
 
 /// Request to read the value of a parameter with either the param_id string id or param_index. PARAM_EXT_VALUE should be emitted in response.
@@ -35100,6 +37292,14 @@ class ParamExtRequestRead implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 4, paramId);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'param_index': paramIndex,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'param_id': paramId,
+      };
 }
 
 /// Request all parameters of this component. All parameters should be emitted in response as PARAM_EXT_VALUE.
@@ -35157,6 +37357,12 @@ class ParamExtRequestList implements MavlinkMessage {
     data_.setUint8(1, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Emit the value of a parameter. The inclusion of param_count and param_index in the message allows the recipient to keep track of received parameters and allows them to re-request missing parameters after a loss or timeout.
@@ -35250,6 +37456,15 @@ class ParamExtValue implements MavlinkMessage {
     data_.setUint8(148, paramType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'param_count': paramCount,
+        'param_index': paramIndex,
+        'param_id': paramId,
+        'param_value': paramValue,
+        'param_type': paramType,
+      };
 }
 
 /// Set a parameter value. In order to deal with message loss (and retransmission of PARAM_EXT_SET), when setting a parameter value and the new value is the same as the current value, you will immediately get a PARAM_ACK_ACCEPTED response. If the current state is PARAM_ACK_IN_PROGRESS, you will accordingly receive a PARAM_ACK_IN_PROGRESS in response.
@@ -35343,6 +37558,15 @@ class ParamExtSet implements MavlinkMessage {
     data_.setUint8(146, paramType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'param_id': paramId,
+        'param_value': paramValue,
+        'param_type': paramType,
+      };
 }
 
 /// Response from a PARAM_EXT_SET message.
@@ -35427,6 +37651,14 @@ class ParamExtAck implements MavlinkMessage {
     data_.setUint8(145, paramResult);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'param_id': paramId,
+        'param_value': paramValue,
+        'param_type': paramType,
+        'param_result': paramResult,
+      };
 }
 
 /// Obstacle distances in front of the sensor, starting from the left in increment degrees to the right
@@ -35586,6 +37818,19 @@ class ObstacleDistance implements MavlinkMessage {
     data_.setUint8(166, frame);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'distances': distances,
+        'min_distance': minDistance,
+        'max_distance': maxDistance,
+        'sensor_type': sensorType,
+        'increment': increment,
+        'increment_f': incrementF,
+        'angle_offset': angleOffset,
+        'frame': frame,
+      };
 }
 
 /// Odometry message to communicate odometry information with an external interface. Fits ROS REP 147 standard for aerial vehicles (http://www.ros.org/reps/rep-0147.html).
@@ -35854,6 +38099,28 @@ class Odometry implements MavlinkMessage {
     data_.setInt8(232, quality);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'x': x,
+        'y': y,
+        'z': z,
+        'q': q,
+        'vx': vx,
+        'vy': vy,
+        'vz': vz,
+        'rollspeed': rollspeed,
+        'pitchspeed': pitchspeed,
+        'yawspeed': yawspeed,
+        'pose_covariance': poseCovariance,
+        'velocity_covariance': velocityCovariance,
+        'frame_id': frameId,
+        'child_frame_id': childFrameId,
+        'reset_counter': resetCounter,
+        'estimator_type': estimatorType,
+        'quality': quality,
+      };
 }
 
 /// Describe a trajectory using an array of up-to 5 waypoints in the local frame (MAV_FRAME_LOCAL_NED).
@@ -36072,6 +38339,24 @@ class TrajectoryRepresentationWaypoints implements MavlinkMessage {
     data_.setUint8(238, validPoints);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'pos_x': posX,
+        'pos_y': posY,
+        'pos_z': posZ,
+        'vel_x': velX,
+        'vel_y': velY,
+        'vel_z': velZ,
+        'acc_x': accX,
+        'acc_y': accY,
+        'acc_z': accZ,
+        'pos_yaw': posYaw,
+        'vel_yaw': velYaw,
+        'command': command,
+        'valid_points': validPoints,
+      };
 }
 
 /// Describe a trajectory using an array of up-to 5 bezier control points in the local frame (MAV_FRAME_LOCAL_NED).
@@ -36199,6 +38484,17 @@ class TrajectoryRepresentationBezier implements MavlinkMessage {
     data_.setUint8(108, validPoints);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'pos_x': posX,
+        'pos_y': posY,
+        'pos_z': posZ,
+        'delta': delta,
+        'pos_yaw': posYaw,
+        'valid_points': validPoints,
+      };
 }
 
 /// Report current used cellular network status
@@ -36318,6 +38614,17 @@ class CellularStatus implements MavlinkMessage {
     data_.setUint8(9, quality);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'mcc': mcc,
+        'mnc': mnc,
+        'lac': lac,
+        'status': status,
+        'failure_reason': failureReason,
+        'type': type,
+        'quality': quality,
+      };
 }
 
 /// Status of the Iridium SBD link.
@@ -36446,6 +38753,18 @@ class IsbdLinkStatus implements MavlinkMessage {
     data_.setUint8(23, rxSessionPending);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'timestamp': timestamp,
+        'last_heartbeat': lastHeartbeat,
+        'failed_sessions': failedSessions,
+        'successful_sessions': successfulSessions,
+        'signal_quality': signalQuality,
+        'ring_pending': ringPending,
+        'tx_session_pending': txSessionPending,
+        'rx_session_pending': rxSessionPending,
+      };
 }
 
 /// Configure cellular modems.
@@ -36574,6 +38893,18 @@ class CellularConfig implements MavlinkMessage {
     data_.setUint8(83, response);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'enable_lte': enableLte,
+        'enable_pin': enablePin,
+        'pin': pin,
+        'new_pin': newPin,
+        'apn': apn,
+        'puk': puk,
+        'roaming': roaming,
+        'response': response,
+      };
 }
 
 /// RPM sensor data message.
@@ -36632,6 +38963,12 @@ class RawRpm implements MavlinkMessage {
     data_.setUint8(4, index);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'frequency': frequency,
+        'index': index,
+      };
 }
 
 /// The global position resulting from GPS and sensor fusion.
@@ -36900,6 +39237,28 @@ class UtmGlobalPosition implements MavlinkMessage {
     data_.setUint8(69, flags);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time': time,
+        'lat': lat,
+        'lon': lon,
+        'alt': alt,
+        'relative_alt': relativeAlt,
+        'next_lat': nextLat,
+        'next_lon': nextLon,
+        'next_alt': nextAlt,
+        'vx': vx,
+        'vy': vy,
+        'vz': vz,
+        'h_acc': hAcc,
+        'v_acc': vAcc,
+        'vel_acc': velAcc,
+        'update_rate': updateRate,
+        'uas_id': uasId,
+        'flight_state': flightState,
+        'flags': flags,
+      };
 }
 
 /// Large debug/prototyping array. The message uses the maximum available payload for data. The array_id and name fields are used to discriminate between messages in code and in user interfaces (respectively). Do not use in production code.
@@ -36981,6 +39340,14 @@ class DebugFloatArray implements MavlinkMessage {
     MavlinkMessage.setFloat32List(data_, 20, data);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'array_id': arrayId,
+        'name': name,
+        'data': data,
+      };
 }
 
 /// Vehicle status report that is sent out while orbit execution is in progress (see MAV_CMD_DO_ORBIT).
@@ -37086,6 +39453,16 @@ class OrbitExecutionStatus implements MavlinkMessage {
     data_.setUint8(24, frame);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'radius': radius,
+        'x': x,
+        'y': y,
+        'z': z,
+        'frame': frame,
+      };
 }
 
 ///
@@ -37374,6 +39751,30 @@ class BatteryInfo implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 90, name);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'discharge_minimum_voltage': dischargeMinimumVoltage,
+        'charging_minimum_voltage': chargingMinimumVoltage,
+        'resting_minimum_voltage': restingMinimumVoltage,
+        'charging_maximum_voltage': chargingMaximumVoltage,
+        'charging_maximum_current': chargingMaximumCurrent,
+        'nominal_voltage': nominalVoltage,
+        'discharge_maximum_current': dischargeMaximumCurrent,
+        'discharge_maximum_burst_current': dischargeMaximumBurstCurrent,
+        'design_capacity': designCapacity,
+        'full_charge_capacity': fullChargeCapacity,
+        'cycle_count': cycleCount,
+        'weight': weight,
+        'id': id,
+        'battery_function': batteryFunction,
+        'type': type,
+        'state_of_health': stateOfHealth,
+        'cells_in_series': cellsInSeries,
+        'manufacture_date': manufactureDate,
+        'serial_number': serialNumber,
+        'name': name,
+      };
 }
 
 /// Telemetry of power generation system. Alternator or mechanical generator.
@@ -37553,6 +39954,21 @@ class GeneratorStatus implements MavlinkMessage {
     data_.setInt16(40, generatorTemperature, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'status': status,
+        'battery_current': batteryCurrent,
+        'load_current': loadCurrent,
+        'power_generated': powerGenerated,
+        'bus_voltage': busVoltage,
+        'bat_current_setpoint': batCurrentSetpoint,
+        'runtime': runtime,
+        'time_until_maintenance': timeUntilMaintenance,
+        'generator_speed': generatorSpeed,
+        'rectifier_temperature': rectifierTemperature,
+        'generator_temperature': generatorTemperature,
+      };
 }
 
 /// The raw values of the actuator outputs (e.g. on Pixhawk, from MAIN, AUX ports). This message supersedes SERVO_OUTPUT_RAW.
@@ -37622,6 +40038,13 @@ class ActuatorOutputStatus implements MavlinkMessage {
     MavlinkMessage.setFloat32List(data_, 12, actuator);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'active': active,
+        'actuator': actuator,
+      };
 }
 
 /// Time/duration estimates for various events and actions given the current vehicle state and position.
@@ -37723,6 +40146,15 @@ class TimeEstimateToTarget implements MavlinkMessage {
     data_.setInt32(16, commandedAction, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'safe_return': safeReturn,
+        'land': land,
+        'mission_next_item': missionNextItem,
+        'mission_end': missionEnd,
+        'commanded_action': commandedAction,
+      };
 }
 
 /// Message for transporting "arbitrary" variable-length data from one component to another (broadcast is not forbidden, but discouraged). The encoding of the data is usually extension specific, i.e. determined by the source, and is usually not documented as part of the MAVLink specification.
@@ -37816,6 +40248,15 @@ class Tunnel implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 5, payload);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'payload_type': payloadType,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'payload_length': payloadLength,
+        'payload': payload,
+      };
 }
 
 /// A forwarded CAN frame as requested by MAV_CMD_CAN_FORWARD.
@@ -37918,6 +40359,16 @@ class CanFrame implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 8, data);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'bus': bus,
+        'len': len,
+        'data': data,
+      };
 }
 
 /// Hardware status sent by an onboard computer.
@@ -38201,6 +40652,30 @@ class OnboardComputerStatus implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 230, temperatureCore);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'uptime': uptime,
+        'ram_usage': ramUsage,
+        'ram_total': ramTotal,
+        'storage_type': storageType,
+        'storage_usage': storageUsage,
+        'storage_total': storageTotal,
+        'link_type': linkType,
+        'link_tx_rate': linkTxRate,
+        'link_rx_rate': linkRxRate,
+        'link_tx_max': linkTxMax,
+        'link_rx_max': linkRxMax,
+        'fan_speed': fanSpeed,
+        'type': type,
+        'cpu_cores': cpuCores,
+        'cpu_combined': cpuCombined,
+        'gpu_cores': gpuCores,
+        'gpu_combined': gpuCombined,
+        'temperature_board': temperatureBoard,
+        'temperature_core': temperatureCore,
+      };
 }
 
 ///
@@ -38296,6 +40771,15 @@ class ComponentInformation implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 112, peripheralsMetadataUri);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'general_metadata_file_crc': generalMetadataFileCrc,
+        'peripherals_metadata_file_crc': peripheralsMetadataFileCrc,
+        'general_metadata_uri': generalMetadataUri,
+        'peripherals_metadata_uri': peripheralsMetadataUri,
+      };
 }
 
 ///
@@ -38376,6 +40860,13 @@ class ComponentMetadata implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 8, uri);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'file_crc': fileCrc,
+        'uri': uri,
+      };
 }
 
 /// Play vehicle tone/tune (buzzer). Supersedes message PLAY_TUNE.
@@ -38458,6 +40949,14 @@ class PlayTuneV2 implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 6, tune);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'format': format,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'tune': tune,
+      };
 }
 
 /// Tune formats supported by vehicle. This should be emitted as response to MAV_CMD_REQUEST_MESSAGE.
@@ -38529,6 +41028,13 @@ class SupportedTunes implements MavlinkMessage {
     data_.setUint8(5, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'format': format,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Event message. Each new event from a particular component gets a new sequence number. The same message might be sent multiple times if (re-)requested. Most events are broadcast, some can be specific to a target component (as receivers keep track of the sequence for missed events, all events need to be broadcast. Thus we use destination_component instead of target_component).
@@ -38644,6 +41150,17 @@ class Event implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 13, arguments);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'event_time_boot_ms': eventTimeBootMs,
+        'sequence': sequence,
+        'destination_component': destinationComponent,
+        'destination_system': destinationSystem,
+        'log_levels': logLevels,
+        'arguments': arguments,
+      };
 }
 
 /// Regular broadcast for the current latest event sequence number for a component. This is used to check for dropped events.
@@ -38702,6 +41219,12 @@ class CurrentEventSequence implements MavlinkMessage {
     data_.setUint8(2, flags);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'sequence': sequence,
+        'flags': flags,
+      };
 }
 
 /// Request one or more events to be (re-)sent. If first_sequence==last_sequence, only a single event is requested. Note that first_sequence can be larger than last_sequence (because the sequence number can wrap). Each sequence will trigger an EVENT or EVENT_ERROR response.
@@ -38782,6 +41305,14 @@ class RequestEvent implements MavlinkMessage {
     data_.setUint8(5, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'first_sequence': firstSequence,
+        'last_sequence': lastSequence,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Response to a REQUEST_EVENT in case of an error (e.g. the event is not available anymore).
@@ -38875,6 +41406,15 @@ class ResponseEventError implements MavlinkMessage {
     data_.setUint8(6, reason);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'sequence': sequence,
+        'sequence_oldest_available': sequenceOldestAvailable,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'reason': reason,
+      };
 }
 
 /// A forwarded CANFD frame as requested by MAV_CMD_CAN_FORWARD. These are separated from CAN_FRAME as they need different handling (eg. TAO handling)
@@ -38977,6 +41517,16 @@ class CanfdFrame implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 8, data);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'bus': bus,
+        'len': len,
+        'data': data,
+      };
 }
 
 /// Modify the filter of what CAN messages to forward over the mavlink. This can be used to make CAN forwarding work well on low bandwidth links. The filtering is applied on bits 8 to 24 of the CAN id (2nd and 3rd bytes) which corresponds to the DroneCAN message ID for DroneCAN. Filters with more than 16 IDs can be constructed by sending multiple CAN_FILTER_MODIFY messages.
@@ -39081,6 +41631,16 @@ class CanFilterModify implements MavlinkMessage {
     data_.setUint8(36, numIds);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'ids': ids,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'bus': bus,
+        'operation': operation,
+        'num_ids': numIds,
+      };
 }
 
 /// Cumulative distance traveled for each reported wheel.
@@ -39151,6 +41711,13 @@ class WheelDistance implements MavlinkMessage {
     data_.setUint8(136, count);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'distance': distance,
+        'count': count,
+      };
 }
 
 /// Winch status.
@@ -39291,6 +41858,18 @@ class WinchStatus implements MavlinkMessage {
     data_.setInt16(32, temperature, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'line_length': lineLength,
+        'speed': speed,
+        'tension': tension,
+        'voltage': voltage,
+        'current': current,
+        'status': status,
+        'temperature': temperature,
+      };
 }
 
 /// Data for filling the OpenDroneID Basic ID message. This and the below messages are primarily meant for feeding data to/from an OpenDroneID implementation. E.g. https://github.com/opendroneid/opendroneid-core-c. These messages are compatible with the ASTM F3411 Remote ID standard and the ASD-STAN prEN 4709-002 Direct Remote ID standard. Additional information and usage of these messages is documented at https://mavlink.io/en/services/opendroneid.html.
@@ -39397,6 +41976,16 @@ class OpenDroneIdBasicId implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 24, uasId);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'id_or_mac': idOrMac,
+        'id_type': idType,
+        'ua_type': uaType,
+        'uas_id': uasId,
+      };
 }
 
 /// Data for filling the OpenDroneID Location message. The float data types are 32-bit IEEE 754. The Location message provides the location, altitude, direction and speed of the aircraft.
@@ -39674,6 +42263,29 @@ class OpenDroneIdLocation implements MavlinkMessage {
     data_.setUint8(58, timestampAccuracy);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'latitude': latitude,
+        'longitude': longitude,
+        'altitude_barometric': altitudeBarometric,
+        'altitude_geodetic': altitudeGeodetic,
+        'height': height,
+        'timestamp': timestamp,
+        'direction': direction,
+        'speed_horizontal': speedHorizontal,
+        'speed_vertical': speedVertical,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'id_or_mac': idOrMac,
+        'status': status,
+        'height_reference': heightReference,
+        'horizontal_accuracy': horizontalAccuracy,
+        'vertical_accuracy': verticalAccuracy,
+        'barometer_accuracy': barometerAccuracy,
+        'speed_accuracy': speedAccuracy,
+        'timestamp_accuracy': timestampAccuracy,
+      };
 }
 
 /// Data for filling the OpenDroneID Authentication message. The Authentication Message defines a field that can provide a means of authenticity for the identity of the UAS (Unmanned Aircraft System). The Authentication message can have two different formats. For data page 0, the fields PageCount, Length and TimeStamp are present and AuthData is only 17 bytes. For data page 1 through 15, PageCount, Length and TimeStamp are not present and the size of AuthData is 23 bytes.
@@ -39816,6 +42428,19 @@ class OpenDroneIdAuthentication implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 30, authenticationData);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'timestamp': timestamp,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'id_or_mac': idOrMac,
+        'authentication_type': authenticationType,
+        'data_page': dataPage,
+        'last_page_index': lastPageIndex,
+        'length': length,
+        'authentication_data': authenticationData,
+      };
 }
 
 /// Data for filling the OpenDroneID Self ID message. The Self ID Message is an opportunity for the operator to (optionally) declare their identity and purpose of the flight. This message can provide additional information that could reduce the threat profile of a UA (Unmanned Aircraft) flying in a particular area or manner. This message can also be used to provide optional additional clarification in an emergency/remote ID system failure situation.
@@ -39909,6 +42534,15 @@ class OpenDroneIdSelfId implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 23, description);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'id_or_mac': idOrMac,
+        'description_type': descriptionType,
+        'description': description,
+      };
 }
 
 /// Data for filling the OpenDroneID System message. The System Message contains general system information including the operator location/altitude and possible aircraft group and/or category/class information.
@@ -40132,6 +42766,25 @@ class OpenDroneIdSystem implements MavlinkMessage {
     data_.setUint8(53, classEu);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'operator_latitude': operatorLatitude,
+        'operator_longitude': operatorLongitude,
+        'area_ceiling': areaCeiling,
+        'area_floor': areaFloor,
+        'operator_altitude_geo': operatorAltitudeGeo,
+        'timestamp': timestamp,
+        'area_count': areaCount,
+        'area_radius': areaRadius,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'id_or_mac': idOrMac,
+        'operator_location_type': operatorLocationType,
+        'classification_type': classificationType,
+        'category_eu': categoryEu,
+        'class_eu': classEu,
+      };
 }
 
 /// Data for filling the OpenDroneID Operator ID message, which contains the CAA (Civil Aviation Authority) issued operator ID.
@@ -40226,6 +42879,15 @@ class OpenDroneIdOperatorId implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 23, operatorId);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'id_or_mac': idOrMac,
+        'operator_id_type': operatorIdType,
+        'operator_id': operatorId,
+      };
 }
 
 /// An OpenDroneID message pack is a container for multiple encoded OpenDroneID messages (i.e. not in the format given for the above message descriptions but after encoding into the compressed OpenDroneID byte format). Used e.g. when transmitting on Bluetooth 5.0 Long Range/Extended Advertising or on WiFi Neighbor Aware Networking or on WiFi Beacon.
@@ -40331,6 +42993,16 @@ class OpenDroneIdMessagePack implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 24, messages);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'id_or_mac': idOrMac,
+        'single_message_size': singleMessageSize,
+        'msg_pack_size': msgPackSize,
+        'messages': messages,
+      };
 }
 
 /// Transmitter (remote ID system) is enabled and ready to start sending location and other required information. This is streamed by transmitter. A flight controller uses it as a condition to arm.
@@ -40389,6 +43061,12 @@ class OpenDroneIdArmStatus implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 1, error);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'status': status,
+        'error': error,
+      };
 }
 
 /// Update the data in the OPEN_DRONE_ID_SYSTEM message with new location information. This can be sent to update the location information for the operator when no other information in the SYSTEM message has changed. This message allows for efficient operation on radio links which have limited uplink bandwidth while meeting requirements for update frequency of the operator location.
@@ -40500,6 +43178,16 @@ class OpenDroneIdSystemUpdate implements MavlinkMessage {
     data_.setUint8(17, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'operator_latitude': operatorLatitude,
+        'operator_longitude': operatorLongitude,
+        'operator_altitude_geo': operatorAltitudeGeo,
+        'timestamp': timestamp,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Temperature and humidity from hygrometer.
@@ -40571,6 +43259,13 @@ class HygrometerSensor implements MavlinkMessage {
     data_.setUint8(4, id);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'temperature': temperature,
+        'humidity': humidity,
+        'id': id,
+      };
 }
 
 /// Static data to configure the ADS-B transponder (send within 10 sec of a POR and every 10 sec thereafter)
@@ -40707,6 +43402,18 @@ class UavionixAdsbOutCfg implements MavlinkMessage {
     data_.setUint8(19, rfselect);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'ICAO': icao,
+        'stallSpeed': stallspeed,
+        'callsign': callsign,
+        'emitterType': emittertype,
+        'aircraftSize': aircraftsize,
+        'gpsOffsetLat': gpsoffsetlat,
+        'gpsOffsetLon': gpsoffsetlon,
+        'rfSelect': rfselect,
+      };
 }
 
 /// Dynamic data used to generate ADS-B out transponder data (send at 5Hz)
@@ -40948,6 +43655,26 @@ class UavionixAdsbOutDynamic implements MavlinkMessage {
     data_.setUint8(40, emergencystatus);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'utcTime': utctime,
+        'gpsLat': gpslat,
+        'gpsLon': gpslon,
+        'gpsAlt': gpsalt,
+        'baroAltMSL': baroaltmsl,
+        'accuracyHor': accuracyhor,
+        'accuracyVert': accuracyvert,
+        'accuracyVel': accuracyvel,
+        'velVert': velvert,
+        'velNS': velns,
+        'VelEW': velew,
+        'state': state,
+        'squawk': squawk,
+        'gpsFix': gpsfix,
+        'numSats': numsats,
+        'emergencyStatus': emergencystatus,
+      };
 }
 
 /// Transceiver heartbeat with health report (updated every 10s)
@@ -40998,6 +43725,11 @@ class UavionixAdsbTransceiverHealthReport implements MavlinkMessage {
     data_.setUint8(0, rfhealth);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'rfHealth': rfhealth,
+      };
 }
 
 /// ICAROUS heartbeat
@@ -41046,6 +43778,11 @@ class IcarousHeartbeat implements MavlinkMessage {
     data_.setUint8(0, status);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'status': status,
+      };
 }
 
 /// Kinematic multi bands (track) output from Daidalus
@@ -41289,6 +44026,26 @@ class IcarousKinematicBands implements MavlinkMessage {
     data_.setUint8(45, type5);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'min1': min1,
+        'max1': max1,
+        'min2': min2,
+        'max2': max2,
+        'min3': min3,
+        'max3': max3,
+        'min4': min4,
+        'max4': max4,
+        'min5': min5,
+        'max5': max5,
+        'numBands': numbands,
+        'type1': type1,
+        'type2': type2,
+        'type3': type3,
+        'type4': type4,
+        'type5': type5,
+      };
 }
 
 /// Raw RC Data
@@ -41335,6 +44092,11 @@ class CubepilotRawRc implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 0, rcRaw);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'rc_raw': rcRaw,
+      };
 }
 
 /// Information about video stream
@@ -41471,6 +44233,18 @@ class HerelinkVideoStreamInformation implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 16, uri);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'framerate': framerate,
+        'bitrate': bitrate,
+        'resolution_h': resolutionH,
+        'resolution_v': resolutionV,
+        'rotation': rotation,
+        'camera_id': cameraId,
+        'status': status,
+        'uri': uri,
+      };
 }
 
 /// Herelink Telemetry
@@ -41584,6 +44358,17 @@ class HerelinkTelem implements MavlinkMessage {
     data_.setUint8(18, rssi);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'rf_freq': rfFreq,
+        'link_bw': linkBw,
+        'link_rate': linkRate,
+        'snr': snr,
+        'cpu_temp': cpuTemp,
+        'board_temp': boardTemp,
+        'rssi': rssi,
+      };
 }
 
 /// Start firmware update with encapsulated data.
@@ -41668,6 +44453,14 @@ class CubepilotFirmwareUpdateStart implements MavlinkMessage {
     data_.setUint8(9, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'size': size,
+        'crc': crc,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// offset response to encapsulated data.
@@ -41741,6 +44534,13 @@ class CubepilotFirmwareUpdateResp implements MavlinkMessage {
     data_.setUint8(5, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'offset': offset,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Authorization package
@@ -41797,6 +44597,12 @@ class AirlinkAuth implements MavlinkMessage {
     MavlinkMessage.setInt8List(data_, 50, password);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'login': login,
+        'password': password,
+      };
 }
 
 /// Response to the authorization request
@@ -41845,6 +44651,11 @@ class AirlinkAuthResponse implements MavlinkMessage {
     data_.setUint8(0, respType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'resp_type': respType,
+      };
 }
 
 /// Request to hole punching
@@ -41895,6 +44706,11 @@ class AirlinkEyeGsHolePushRequest implements MavlinkMessage {
     data_.setUint8(0, respType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'resp_type': respType,
+      };
 }
 
 /// Response information about the connected device
@@ -41992,6 +44808,15 @@ class AirlinkEyeGsHolePushResponse implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 10, ipAddress6);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'ip_port': ipPort,
+        'resp_type': respType,
+        'ip_version': ipVersion,
+        'ip_address_4': ipAddress4,
+        'ip_address_6': ipAddress6,
+      };
 }
 
 /// A package with information about the hole punching status. It is used for constant sending to avoid NAT closing timeout.
@@ -42040,6 +44865,11 @@ class AirlinkEyeHp implements MavlinkMessage {
     data_.setUint8(0, respType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'resp_type': respType,
+      };
 }
 
 /// Initializing the TURN protocol
@@ -42088,6 +44918,11 @@ class AirlinkEyeTurnInit implements MavlinkMessage {
     data_.setUint8(0, respType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'resp_type': respType,
+      };
 }
 
 /// Offsets and calibrations values for hardware sensors. This makes it easier to debug the calibration process.
@@ -42258,6 +45093,22 @@ class SensorOffsets implements MavlinkMessage {
     data_.setInt16(40, magOfsZ, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'mag_declination': magDeclination,
+        'raw_press': rawPress,
+        'raw_temp': rawTemp,
+        'gyro_cal_x': gyroCalX,
+        'gyro_cal_y': gyroCalY,
+        'gyro_cal_z': gyroCalZ,
+        'accel_cal_x': accelCalX,
+        'accel_cal_y': accelCalY,
+        'accel_cal_z': accelCalZ,
+        'mag_ofs_x': magOfsX,
+        'mag_ofs_y': magOfsY,
+        'mag_ofs_z': magOfsZ,
+      };
 }
 
 /// Set the magnetometer offsets
@@ -42349,6 +45200,15 @@ class SetMagOffsets implements MavlinkMessage {
     data_.setUint8(7, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'mag_ofs_x': magOfsX,
+        'mag_ofs_y': magOfsY,
+        'mag_ofs_z': magOfsZ,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// State of autopilot RAM.
@@ -42421,6 +45281,13 @@ class Meminfo implements MavlinkMessage {
     data_.setUint32(4, freemem32, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'brkval': brkval,
+        'freemem': freemem,
+        'freemem32': freemem32,
+      };
 }
 
 /// Raw ADC output.
@@ -42518,6 +45385,16 @@ class ApAdc implements MavlinkMessage {
     data_.setUint16(10, adc6, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'adc1': adc1,
+        'adc2': adc2,
+        'adc3': adc3,
+        'adc4': adc4,
+        'adc5': adc5,
+        'adc6': adc6,
+      };
 }
 
 /// Configure on-board Camera Control System.
@@ -42677,6 +45554,21 @@ class DigicamConfigure implements MavlinkMessage {
     data_.setUint8(14, extraParam);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'extra_value': extraValue,
+        'shutter_speed': shutterSpeed,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'mode': mode,
+        'aperture': aperture,
+        'iso': iso,
+        'exposure_type': exposureType,
+        'command_id': commandId,
+        'engine_cut_off': engineCutOff,
+        'extra_param': extraParam,
+      };
 }
 
 /// Control on-board Camera Control System to take shots.
@@ -42823,6 +45715,20 @@ class DigicamControl implements MavlinkMessage {
     data_.setUint8(12, extraParam);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'extra_value': extraValue,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'session': session,
+        'zoom_pos': zoomPos,
+        'zoom_step': zoomStep,
+        'focus_lock': focusLock,
+        'shot': shot,
+        'command_id': commandId,
+        'extra_param': extraParam,
+      };
 }
 
 /// Message to configure a camera mount, directional antenna, etc.
@@ -42927,6 +45833,16 @@ class MountConfigure implements MavlinkMessage {
     data_.setUint8(5, stabYaw);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'mount_mode': mountMode,
+        'stab_roll': stabRoll,
+        'stab_pitch': stabPitch,
+        'stab_yaw': stabYaw,
+      };
 }
 
 /// Message to control a camera mount, directional antenna, etc.
@@ -43029,6 +45945,16 @@ class MountControl implements MavlinkMessage {
     data_.setUint8(14, savePosition);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'input_a': inputA,
+        'input_b': inputB,
+        'input_c': inputC,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'save_position': savePosition,
+      };
 }
 
 /// Message with some status from autopilot to GCS about camera or antenna mount.
@@ -43141,6 +46067,16 @@ class MountStatus implements MavlinkMessage {
     data_.setUint8(14, mountMode);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'pointing_a': pointingA,
+        'pointing_b': pointingB,
+        'pointing_c': pointingC,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'mount_mode': mountMode,
+      };
 }
 
 /// A fence point. Used to set a point when from GCS -> MAV. Also used to return a point from MAV -> GCS.
@@ -43247,6 +46183,16 @@ class FencePoint implements MavlinkMessage {
     data_.setUint8(11, count);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'lat': lat,
+        'lng': lng,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'idx': idx,
+        'count': count,
+      };
 }
 
 /// Request a current fence point from MAV.
@@ -43314,6 +46260,13 @@ class FenceFetchPoint implements MavlinkMessage {
     data_.setUint8(2, idx);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'idx': idx,
+      };
 }
 
 /// Status of DCM attitude estimator.
@@ -43433,6 +46386,17 @@ class Ahrs implements MavlinkMessage {
     data_.setFloat32(24, errorYaw, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'omegaIx': omegaix,
+        'omegaIy': omegaiy,
+        'omegaIz': omegaiz,
+        'accel_weight': accelWeight,
+        'renorm_val': renormVal,
+        'error_rp': errorRp,
+        'error_yaw': errorYaw,
+      };
 }
 
 /// Status of simulation environment, if used.
@@ -43612,6 +46576,21 @@ class Simstate implements MavlinkMessage {
     data_.setInt32(40, lng, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'roll': roll,
+        'pitch': pitch,
+        'yaw': yaw,
+        'xacc': xacc,
+        'yacc': yacc,
+        'zacc': zacc,
+        'xgyro': xgyro,
+        'ygyro': ygyro,
+        'zgyro': zgyro,
+        'lat': lat,
+        'lng': lng,
+      };
 }
 
 /// Status of key hardware.
@@ -43670,6 +46649,12 @@ class Hwstatus implements MavlinkMessage {
     data_.setUint8(2, i2cerr);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'Vcc': vcc,
+        'I2Cerr': i2cerr,
+      };
 }
 
 /// Status generated by radio.
@@ -43785,6 +46770,17 @@ class Radio implements MavlinkMessage {
     data_.setUint8(8, remnoise);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'rxerrors': rxerrors,
+        'fixed': fixed,
+        'rssi': rssi,
+        'remrssi': remrssi,
+        'txbuf': txbuf,
+        'noise': noise,
+        'remnoise': remnoise,
+      };
 }
 
 /// Status of AP_Limits. Sent in extended status stream when AP_Limits is enabled.
@@ -43936,6 +46932,19 @@ class LimitsStatus implements MavlinkMessage {
     data_.setUint8(21, modsTriggered);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'last_trigger': lastTrigger,
+        'last_action': lastAction,
+        'last_recovery': lastRecovery,
+        'last_clear': lastClear,
+        'breach_count': breachCount,
+        'limits_state': limitsState,
+        'mods_enabled': modsEnabled,
+        'mods_required': modsRequired,
+        'mods_triggered': modsTriggered,
+      };
 }
 
 /// Wind estimation.
@@ -44008,6 +47017,13 @@ class Wind implements MavlinkMessage {
     data_.setFloat32(8, speedZ, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'direction': direction,
+        'speed': speed,
+        'speed_z': speedZ,
+      };
 }
 
 /// Data packet, size 16.
@@ -44076,6 +47092,13 @@ class Data16 implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 2, data);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': type,
+        'len': len,
+        'data': data,
+      };
 }
 
 /// Data packet, size 32.
@@ -44144,6 +47167,13 @@ class Data32 implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 2, data);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': type,
+        'len': len,
+        'data': data,
+      };
 }
 
 /// Data packet, size 64.
@@ -44212,6 +47242,13 @@ class Data64 implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 2, data);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': type,
+        'len': len,
+        'data': data,
+      };
 }
 
 /// Data packet, size 96.
@@ -44280,6 +47317,13 @@ class Data96 implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 2, data);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'type': type,
+        'len': len,
+        'data': data,
+      };
 }
 
 /// Rangefinder reporting.
@@ -44340,6 +47384,12 @@ class Rangefinder implements MavlinkMessage {
     data_.setFloat32(4, voltage, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'distance': distance,
+        'voltage': voltage,
+      };
 }
 
 /// Airspeed auto-calibration.
@@ -44516,6 +47566,22 @@ class AirspeedAutocal implements MavlinkMessage {
     data_.setFloat32(44, pcz, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'vx': vx,
+        'vy': vy,
+        'vz': vz,
+        'diff_pressure': diffPressure,
+        'EAS2TAS': eas2tas,
+        'ratio': ratio,
+        'state_x': stateX,
+        'state_y': stateY,
+        'state_z': stateZ,
+        'Pax': pax,
+        'Pby': pby,
+        'Pcz': pcz,
+      };
 }
 
 /// A rally point. Used to set a point when from GCS -> MAV. Also used to return a point from MAV -> GCS.
@@ -44674,6 +47740,20 @@ class RallyPoint implements MavlinkMessage {
     data_.setUint8(18, flags);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'lat': lat,
+        'lng': lng,
+        'alt': alt,
+        'break_alt': breakAlt,
+        'land_dir': landDir,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'idx': idx,
+        'count': count,
+        'flags': flags,
+      };
 }
 
 /// Request a current rally point from MAV. MAV should respond with a RALLY_POINT message. MAV should not respond if the request is invalid.
@@ -44741,6 +47821,13 @@ class RallyFetchPoint implements MavlinkMessage {
     data_.setUint8(2, idx);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'idx': idx,
+      };
 }
 
 /// Status of compassmot calibration.
@@ -44849,6 +47936,16 @@ class CompassmotStatus implements MavlinkMessage {
     data_.setUint16(18, interference, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'current': current,
+        'CompensationX': compensationx,
+        'CompensationY': compensationy,
+        'CompensationZ': compensationz,
+        'throttle': throttle,
+        'interference': interference,
+      };
 }
 
 /// Status of secondary AHRS filter if available.
@@ -44963,6 +48060,16 @@ class Ahrs2 implements MavlinkMessage {
     data_.setInt32(20, lng, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'roll': roll,
+        'pitch': pitch,
+        'yaw': yaw,
+        'altitude': altitude,
+        'lat': lat,
+        'lng': lng,
+      };
 }
 
 /// Camera Event.
@@ -45102,6 +48209,19 @@ class CameraStatus implements MavlinkMessage {
     data_.setUint8(28, eventId);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'p1': p1,
+        'p2': p2,
+        'p3': p3,
+        'p4': p4,
+        'img_idx': imgIdx,
+        'target_system': targetSystem,
+        'cam_idx': camIdx,
+        'event_id': eventId,
+      };
 }
 
 /// Camera Capture Feedback.
@@ -45314,6 +48434,24 @@ class CameraFeedback implements MavlinkMessage {
     data_.setUint16(45, completedCaptures, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'lat': lat,
+        'lng': lng,
+        'alt_msl': altMsl,
+        'alt_rel': altRel,
+        'roll': roll,
+        'pitch': pitch,
+        'yaw': yaw,
+        'foc_len': focLen,
+        'img_idx': imgIdx,
+        'target_system': targetSystem,
+        'cam_idx': camIdx,
+        'flags': flags,
+        'completed_captures': completedCaptures,
+      };
 }
 
 /// 2nd Battery status
@@ -45374,6 +48512,12 @@ class Battery2 implements MavlinkMessage {
     data_.setInt16(2, currentBattery, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'voltage': voltage,
+        'current_battery': currentBattery,
+      };
 }
 
 /// Status of third AHRS filter if available. This is for ANU research group (Ali and Sean).
@@ -45532,6 +48676,20 @@ class Ahrs3 implements MavlinkMessage {
     data_.setFloat32(36, v4, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'roll': roll,
+        'pitch': pitch,
+        'yaw': yaw,
+        'altitude': altitude,
+        'lat': lat,
+        'lng': lng,
+        'v1': v1,
+        'v2': v2,
+        'v3': v3,
+        'v4': v4,
+      };
 }
 
 /// Request the autopilot version from the system/component.
@@ -45590,6 +48748,12 @@ class AutopilotVersionRequest implements MavlinkMessage {
     data_.setUint8(1, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Send a block of log data to remote location.
@@ -45672,6 +48836,14 @@ class RemoteLogDataBlock implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 6, data);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'seqno': seqno,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'data': data,
+      };
 }
 
 /// Send Status of each log block that autopilot board might have sent.
@@ -45754,6 +48926,14 @@ class RemoteLogBlockStatus implements MavlinkMessage {
     data_.setUint8(6, status);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'seqno': seqno,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'status': status,
+      };
 }
 
 /// Control vehicle LEDs.
@@ -45856,6 +49036,16 @@ class LedControl implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 5, customBytes);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'instance': instance,
+        'pattern': pattern,
+        'custom_len': customLen,
+        'custom_bytes': customBytes,
+      };
 }
 
 /// Reports progress of compass calibration.
@@ -45995,6 +49185,19 @@ class MagCalProgress implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 17, completionMask);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'direction_x': directionX,
+        'direction_y': directionY,
+        'direction_z': directionZ,
+        'compass_id': compassId,
+        'cal_mask': calMask,
+        'cal_status': calStatus,
+        'attempt': attempt,
+        'completion_pct': completionPct,
+        'completion_mask': completionMask,
+      };
 }
 
 /// EKF Status message including flags and variances.
@@ -46112,6 +49315,17 @@ class EkfStatusReport implements MavlinkMessage {
     data_.setFloat32(22, airspeedVariance, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'velocity_variance': velocityVariance,
+        'pos_horiz_variance': posHorizVariance,
+        'pos_vert_variance': posVertVariance,
+        'compass_variance': compassVariance,
+        'terrain_alt_variance': terrainAltVariance,
+        'flags': flags,
+        'airspeed_variance': airspeedVariance,
+      };
 }
 
 /// PID tuning information.
@@ -46253,6 +49467,19 @@ class PidTuning implements MavlinkMessage {
     data_.setFloat32(29, pdmod, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'desired': desired,
+        'achieved': achieved,
+        'FF': ff,
+        'P': p,
+        'I': i,
+        'D': d,
+        'axis': axis,
+        'SRate': srate,
+        'PDmod': pdmod,
+      };
 }
 
 /// Deepstall path planning.
@@ -46419,6 +49646,20 @@ class Deepstall implements MavlinkMessage {
     data_.setUint8(36, stage);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'landing_lat': landingLat,
+        'landing_lon': landingLon,
+        'path_lat': pathLat,
+        'path_lon': pathLon,
+        'arc_entry_lat': arcEntryLat,
+        'arc_entry_lon': arcEntryLon,
+        'altitude': altitude,
+        'expected_travel_distance': expectedTravelDistance,
+        'cross_track_error': crossTrackError,
+        'stage': stage,
+      };
 }
 
 /// 3 axis gimbal measurements.
@@ -46607,6 +49848,22 @@ class GimbalReport implements MavlinkMessage {
     data_.setUint8(41, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'delta_time': deltaTime,
+        'delta_angle_x': deltaAngleX,
+        'delta_angle_y': deltaAngleY,
+        'delta_angle_z': deltaAngleZ,
+        'delta_velocity_x': deltaVelocityX,
+        'delta_velocity_y': deltaVelocityY,
+        'delta_velocity_z': deltaVelocityZ,
+        'joint_roll': jointRoll,
+        'joint_el': jointEl,
+        'joint_az': jointAz,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Control message for rate gimbal.
@@ -46704,6 +49961,15 @@ class GimbalControl implements MavlinkMessage {
     data_.setUint8(13, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'demanded_rate_x': demandedRateX,
+        'demanded_rate_y': demandedRateY,
+        'demanded_rate_z': demandedRateZ,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// 100 Hz gimbal torque command telemetry.
@@ -46796,6 +50062,15 @@ class GimbalTorqueCmdReport implements MavlinkMessage {
     data_.setUint8(7, targetComponent);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'rl_torque_cmd': rlTorqueCmd,
+        'el_torque_cmd': elTorqueCmd,
+        'az_torque_cmd': azTorqueCmd,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+      };
 }
 
 /// Heartbeat from a HeroBus attached GoPro.
@@ -46869,6 +50144,13 @@ class GoproHeartbeat implements MavlinkMessage {
     data_.setUint8(2, flags);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'status': status,
+        'capture_mode': captureMode,
+        'flags': flags,
+      };
 }
 
 /// Request a GOPRO_COMMAND response from the GoPro.
@@ -46940,6 +50222,13 @@ class GoproGetRequest implements MavlinkMessage {
     data_.setUint8(2, cmdId);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'cmd_id': cmdId,
+      };
 }
 
 /// Response from a GOPRO_COMMAND get request.
@@ -47010,6 +50299,13 @@ class GoproGetResponse implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 2, value);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'cmd_id': cmdId,
+        'status': status,
+        'value': value,
+      };
 }
 
 /// Request to set a GOPRO_COMMAND with a desired.
@@ -47092,6 +50388,14 @@ class GoproSetRequest implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 3, value);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'cmd_id': cmdId,
+        'value': value,
+      };
 }
 
 /// Response from a GOPRO_COMMAND set request.
@@ -47152,6 +50456,12 @@ class GoproSetResponse implements MavlinkMessage {
     data_.setUint8(1, status);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'cmd_id': cmdId,
+        'status': status,
+      };
 }
 
 /// RPM sensor output.
@@ -47208,6 +50518,12 @@ class Rpm implements MavlinkMessage {
     data_.setFloat32(4, rpm2, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'rpm1': rpm1,
+        'rpm2': rpm2,
+      };
 }
 
 /// Read registers for a device.
@@ -47358,6 +50674,20 @@ class DeviceOpRead implements MavlinkMessage {
     data_.setUint8(51, bank);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'request_id': requestId,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'bustype': bustype,
+        'bus': bus,
+        'address': address,
+        'busname': busname,
+        'regstart': regstart,
+        'count': count,
+        'bank': bank,
+      };
 }
 
 /// Read registers reply.
@@ -47462,6 +50792,16 @@ class DeviceOpReadReply implements MavlinkMessage {
     data_.setUint8(135, bank);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'request_id': requestId,
+        'result': result,
+        'regstart': regstart,
+        'count': count,
+        'data': data,
+        'bank': bank,
+      };
 }
 
 /// Write registers for a device.
@@ -47623,6 +50963,21 @@ class DeviceOpWrite implements MavlinkMessage {
     data_.setUint8(179, bank);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'request_id': requestId,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'bustype': bustype,
+        'bus': bus,
+        'address': address,
+        'busname': busname,
+        'regstart': regstart,
+        'count': count,
+        'data': data,
+        'bank': bank,
+      };
 }
 
 /// Write registers reply.
@@ -47679,6 +51034,12 @@ class DeviceOpWriteReply implements MavlinkMessage {
     data_.setUint8(4, result);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'request_id': requestId,
+        'result': result,
+      };
 }
 
 /// Adaptive Controller tuning information.
@@ -47864,6 +51225,23 @@ class AdapTuning implements MavlinkMessage {
     data_.setUint8(48, axis);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'desired': desired,
+        'achieved': achieved,
+        'error': error,
+        'theta': theta,
+        'omega': omega,
+        'sigma': sigma,
+        'theta_dot': thetaDot,
+        'omega_dot': omegaDot,
+        'sigma_dot': sigmaDot,
+        'f': f,
+        'f_dot': fDot,
+        'u': u,
+        'axis': axis,
+      };
 }
 
 /// Camera vision based attitude and position deltas.
@@ -47965,6 +51343,15 @@ class VisionPositionDelta implements MavlinkMessage {
     data_.setFloat32(40, confidence, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'time_delta_usec': timeDeltaUsec,
+        'angle_delta': angleDelta,
+        'position_delta': positionDelta,
+        'confidence': confidence,
+      };
 }
 
 /// Angle of Attack and Side Slip Angle.
@@ -48037,6 +51424,13 @@ class AoaSsa implements MavlinkMessage {
     data_.setFloat32(12, ssa, Endian.little);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_usec': timeUsec,
+        'AOA': aoa,
+        'SSA': ssa,
+      };
 }
 
 /// ESC Telemetry Data for ESCs 1 to 4, matching data sent by BLHeli ESCs.
@@ -48149,6 +51543,16 @@ class EscTelemetry1To4 implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 40, temperature);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'voltage': voltage,
+        'current': current,
+        'totalcurrent': totalcurrent,
+        'rpm': rpm,
+        'count': count,
+        'temperature': temperature,
+      };
 }
 
 /// ESC Telemetry Data for ESCs 5 to 8, matching data sent by BLHeli ESCs.
@@ -48261,6 +51665,16 @@ class EscTelemetry5To8 implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 40, temperature);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'voltage': voltage,
+        'current': current,
+        'totalcurrent': totalcurrent,
+        'rpm': rpm,
+        'count': count,
+        'temperature': temperature,
+      };
 }
 
 /// ESC Telemetry Data for ESCs 9 to 12, matching data sent by BLHeli ESCs.
@@ -48373,6 +51787,16 @@ class EscTelemetry9To12 implements MavlinkMessage {
     MavlinkMessage.setUint8List(data_, 40, temperature);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'voltage': voltage,
+        'current': current,
+        'totalcurrent': totalcurrent,
+        'rpm': rpm,
+        'count': count,
+        'temperature': temperature,
+      };
 }
 
 /// Configure an OSD parameter slot.
@@ -48521,6 +51945,20 @@ class OsdParamConfig implements MavlinkMessage {
     data_.setUint8(36, configType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'request_id': requestId,
+        'min_value': minValue,
+        'max_value': maxValue,
+        'increment': increment,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'osd_screen': osdScreen,
+        'osd_index': osdIndex,
+        'param_id': paramId,
+        'config_type': configType,
+      };
 }
 
 /// Configure OSD parameter reply.
@@ -48579,6 +52017,12 @@ class OsdParamConfigReply implements MavlinkMessage {
     data_.setUint8(4, result);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'request_id': requestId,
+        'result': result,
+      };
 }
 
 /// Read a configured an OSD parameter slot.
@@ -48670,6 +52114,15 @@ class OsdParamShowConfig implements MavlinkMessage {
     data_.setUint8(7, osdIndex);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'request_id': requestId,
+        'target_system': targetSystem,
+        'target_component': targetComponent,
+        'osd_screen': osdScreen,
+        'osd_index': osdIndex,
+      };
 }
 
 /// Read configured OSD parameter reply.
@@ -48788,6 +52241,17 @@ class OsdParamShowConfigReply implements MavlinkMessage {
     data_.setUint8(33, configType);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'request_id': requestId,
+        'min_value': minValue,
+        'max_value': maxValue,
+        'increment': increment,
+        'result': result,
+        'param_id': paramId,
+        'config_type': configType,
+      };
 }
 
 /// Obstacle located as a 3D vector.
@@ -48939,6 +52403,19 @@ class ObstacleDistance3d implements MavlinkMessage {
     data_.setUint8(27, frame);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'x': x,
+        'y': y,
+        'z': z,
+        'min_distance': minDistance,
+        'max_distance': maxDistance,
+        'obstacle_id': obstacleId,
+        'sensor_type': sensorType,
+        'frame': frame,
+      };
 }
 
 /// Water depth
@@ -49114,6 +52591,21 @@ class WaterDepth implements MavlinkMessage {
     data_.setUint8(37, healthy);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'time_boot_ms': timeBootMs,
+        'lat': lat,
+        'lng': lng,
+        'alt': alt,
+        'roll': roll,
+        'pitch': pitch,
+        'yaw': yaw,
+        'distance': distance,
+        'temperature': temperature,
+        'id': id,
+        'healthy': healthy,
+      };
 }
 
 /// The MCU status, giving MCU temperature and voltage. The min and max voltages are to allow for detecting power supply instability.
@@ -49213,6 +52705,15 @@ class McuStatus implements MavlinkMessage {
     data_.setUint8(8, id);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'MCU_temperature': mcuTemperature,
+        'MCU_voltage': mcuVoltage,
+        'MCU_voltage_min': mcuVoltageMin,
+        'MCU_voltage_max': mcuVoltageMax,
+        'id': id,
+      };
 }
 
 class MavlinkDialectArdupilotmega implements MavlinkDialect {

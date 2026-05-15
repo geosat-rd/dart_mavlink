@@ -781,6 +781,13 @@ var data_ = ByteData(mavlinkEncodedLength);''';
     content += 'return data_;\n';
     content += '}\n';
 
+    content += '\n@override\n';
+    content += 'Map<String, dynamic> toJson() => {\n';
+    for (var field in msg.orderedFields) {
+      content += "'${field.name}': ${field.nameForDart},\n";
+    }
+    content += '};\n';
+
     content += '}\n';
   }
 

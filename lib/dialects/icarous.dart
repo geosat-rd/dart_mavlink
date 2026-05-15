@@ -93,6 +93,11 @@ class IcarousHeartbeat implements MavlinkMessage {
     data_.setUint8(0, status);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'status': status,
+      };
 }
 
 /// Kinematic multi bands (track) output from Daidalus
@@ -336,6 +341,26 @@ class IcarousKinematicBands implements MavlinkMessage {
     data_.setUint8(45, type5);
     return data_;
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'min1': min1,
+        'max1': max1,
+        'min2': min2,
+        'max2': max2,
+        'min3': min3,
+        'max3': max3,
+        'min4': min4,
+        'max4': max4,
+        'min5': min5,
+        'max5': max5,
+        'numBands': numbands,
+        'type1': type1,
+        'type2': type2,
+        'type3': type3,
+        'type4': type4,
+        'type5': type5,
+      };
 }
 
 class MavlinkDialectIcarous implements MavlinkDialect {
