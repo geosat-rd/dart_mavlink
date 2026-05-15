@@ -1,6 +1,6 @@
 name: dart_mavlink
 description: MAVLink library for Dart.
-version: 0.1.0
+version: 0.1.1
 repository: https://gitlab.geosat.com.tw/D00S00/gcs/dart_mavlink
 environment:
   sdk: '>=2.13.0 <3.0.0'
